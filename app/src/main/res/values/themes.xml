@@ -2,8 +2,14 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FlowIT" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.NoRipple</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.FlowIT" parent="Base.Theme.FlowIT" />
+    <style name="Theme.FlowIT" parent="Base.Theme.FlowIT">
+        <item name="colorControlHighlight">@android:color/transparent</item>
+    </style>
+    <style name="ThemeOverlay.Material3.NoRipple" parent="">
+        <item name="colorControlHighlight">@android:color/transparent</item>
+    </style>
 </resources>

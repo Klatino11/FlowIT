@@ -5,15 +5,71 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lyLogin"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="San  Turrona"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/logograndetransparente"
+        android:contentDescription="Logo de la aplicación" />
+
+        <TextView
+            android:id="@+id/tvTituloLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iniciar Sesión"
+            android:textColor="#1F395B"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <EditText
+            android:id="@+id/etUsuario"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="Correo"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000"
+            android:backgroundTint="#11D5D1"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:backgroundTint="#11D5D1"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="400dp"
+            android:layout_height="48dp"
+            android:text="Login"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2656A0"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

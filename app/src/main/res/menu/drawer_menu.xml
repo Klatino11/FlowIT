@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Header invisible o espaciador superior -->
+    <item
+        android:id="@+id/nav_spacer_top"
+        android:title=""
+        android:enabled="false"
+        android:icon="@android:color/transparent" />
+
+    <!-- Grupo principal centrado -->
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_dispositivos"
+            android:title="Dispositivos"
+            android:icon="@drawable/ic_devices" />
+
+        <item
+            android:id="@+id/nav_empleados"
+            android:title="Empleados"
+            android:icon="@drawable/ic_empleados" />
+
+        <item
+            android:id="@+id/nav_oficinas"
+            android:title="Oficinas"
+            android:icon="@drawable/ic_oficinas" />
+
+        <item
+            android:id="@+id/nav_departamentos"
+            android:title="Departamentos"
+            android:icon="@drawable/ic_departamentos" />
+    </group>
+
+    <!-- Espaciador inferior opcional -->
+    <item
+        android:id="@+id/nav_spacer_bottom"
+        android:title=""
+        android:enabled="false"
+        android:icon="@android:color/transparent" />
+
+</menu>

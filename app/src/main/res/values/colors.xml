@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="flowit_turquesa">#11D5D1</color>
+    <color name="flowit_azul_oscuro">#2656A0</color>
+    <color name="flowit_azul_intermedio">#2982B2</color>
+    <color name="flowit_blanco">#FFFFFF</color>
+    <color name="flowit_negro">#000000</color>
 </resources>
