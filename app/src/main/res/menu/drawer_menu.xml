@@ -38,4 +38,10 @@
         android:enabled="false"
         android:icon="@android:color/transparent" />
 
+    <item
+        android:id="@+id/nav_usuario"
+        android:title="Usuario"
+        android:icon="@drawable/ic_usuario" /> <!-- Usa tu icono -->
+
+
 </menu>

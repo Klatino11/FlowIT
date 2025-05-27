@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:src="@drawable/ic_usuario"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:padding="8dp"
+            android:contentDescription="Avatar" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/tvNombreUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kathe Latino"
+                android:textColor="@color/flowit_azul_oscuro"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvCorreoUsuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kathelatino@gmail.com"
+                android:textColor="@color/flowit_azul_intermedio"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- Botón: Ver perfil -->
+        <Button
+            android:id="@+id/btnVerPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ver perfil"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cerrar sesión"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/flowit_turquesa" />
+    </LinearLayout>
+
+</LinearLayout>
