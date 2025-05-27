@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1005412878912",
+    "project_id": "flowit-d7edf",
+    "storage_bucket": "flowit-d7edf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005412878912:android:09eb86ca87a8880cd12da5",
+        "android_client_info": {
+          "package_name": "com.kathlg.flowit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCTyxjaOHGSWM2mMOu8QDuuOKcUC9zUUo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
