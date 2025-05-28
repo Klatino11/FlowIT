@@ -5,7 +5,7 @@
     android:padding="24dp"
     android:layout_width="500dp"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/bg_dialog_rounded">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,18 +56,20 @@
         <!-- Botón: Ver perfil -->
         <Button
             android:id="@+id/btnVerPerfil"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Ver perfil"
             android:textColor="@color/white"
+            android:layout_marginStart="8dp"
             android:backgroundTint="@color/flowit_azul_oscuro"/>
 
         <Button
             android:id="@+id/btnCerrarSesion"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="8dp"
             android:text="Cerrar sesión"
             android:textColor="@color/white"
             android:backgroundTint="@color/flowit_turquesa" />
