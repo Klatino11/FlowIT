@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_item_selector"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/tvNombreEmpleado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre Empleado"
+        android:textStyle="bold"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tvNumEmpleado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nº Empleado: 123"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tvDepartamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Departamento: IT"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:textSize="14sp"/>
+
+</LinearLayout>

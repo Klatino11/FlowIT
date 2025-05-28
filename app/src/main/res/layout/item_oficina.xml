@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_item_selector"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/tvNombreOficina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre Oficina"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/flowit_azul_oscuro"/>
+
+    <TextView
+        android:id="@+id/tvDireccionOficina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirección: —"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_azul_intermedio"/>
+
+    <TextView
+        android:id="@+id/tvCiudadOficina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ciudad: —"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_azul_intermedio"/>
+
+</LinearLayout>

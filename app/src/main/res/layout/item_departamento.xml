@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_item_selector"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvCodigoDepartamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Código: DEP-001"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/flowit_azul_oscuro"/>
+
+    <TextView
+        android:id="@+id/tvNombreDepartamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre: Finanzas"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:layout_marginTop="4dp"/>
+</LinearLayout>

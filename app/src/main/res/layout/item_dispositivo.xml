@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_item_selector"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/tvNombreDispositivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del dispositivo"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvTipoDispositivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo: Portátil"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvEmpleadoAsignado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empleado: EMP001"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvOficina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Oficina: ZGZCentral"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:textSize="14sp" />
+</LinearLayout>
