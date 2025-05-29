@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.dispositivos
+package com.kathlg.flowit.ui.management.dispositivos
 
 import android.view.View
 import android.widget.TextView

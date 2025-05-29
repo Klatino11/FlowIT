@@ -1,17 +1,17 @@
-package com.kathlg.flowit.ui.empleados
+package com.kathlg.flowit.ui.management.oficinas
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kathlg.flowit.data.repository.EmpleadosRepository
+import com.kathlg.flowit.data.repository.OficinasRepository
 
-class EmpleadoViewModelFactory(
-    private val repository: EmpleadosRepository
+class OficinaViewModelFactory(
+    private val repo: OficinasRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(EmpleadosViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(OficinasViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return EmpleadosViewModel(repository) as T
+            return OficinasViewModel(repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

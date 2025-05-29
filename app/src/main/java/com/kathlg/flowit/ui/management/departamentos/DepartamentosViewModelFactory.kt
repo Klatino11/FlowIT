@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.departamentos
+package com.kathlg.flowit.ui.management.departamentos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

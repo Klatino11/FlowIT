@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.oficinas
+package com.kathlg.flowit.ui.management.oficinas
 
 import android.view.View
 import android.widget.TextView

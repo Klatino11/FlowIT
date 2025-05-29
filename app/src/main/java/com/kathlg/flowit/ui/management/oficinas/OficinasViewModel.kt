@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.oficinas
+package com.kathlg.flowit.ui.management.oficinas
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

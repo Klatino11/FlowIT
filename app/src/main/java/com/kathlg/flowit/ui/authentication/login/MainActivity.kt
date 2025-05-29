@@ -1,20 +1,22 @@
-package com.kathlg.flowit.ui.login
+package com.kathlg.flowit.ui.authentication.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kathlg.flowit.R
-import com.kathlg.flowit.ui.home.HomeActivity
+import com.kathlg.flowit.ui.navegation.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.SessionManager
-import com.kathlg.flowit.ui.auth.AuthState
-import com.kathlg.flowit.ui.auth.AuthViewModel
+import com.kathlg.flowit.ui.authentication.auth.AuthState
+import com.kathlg.flowit.ui.authentication.auth.AuthViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,12 +33,15 @@ class MainActivity : AppCompatActivity() {
         SessionManager.currentEmpleado = null
         setContentView(R.layout.activity_main)
 
+        val pbLoading = findViewById<ProgressBar>(R.id.pbLoading)
+
         authViewModel.authState.observe(this) { state ->
             when (state) {
                 is AuthState.Loading -> {
-                    // Opcional: muestra un ProgressBar
+                    pbLoading.visibility = View.VISIBLE
                 }
                 is AuthState.Success -> {
+                    pbLoading.visibility = View.GONE
                     // Login + permiso OK: abre Home pasando el empleado si lo necesitas
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()

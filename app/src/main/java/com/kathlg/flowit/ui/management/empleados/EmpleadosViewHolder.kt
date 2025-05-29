@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.empleados
+package com.kathlg.flowit.ui.management.empleados
 
 import android.view.View
 import android.widget.TextView

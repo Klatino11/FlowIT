@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.dispositivos
+package com.kathlg.flowit.ui.management.dispositivos
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
