@@ -10,10 +10,24 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kathlg.flowit.R
 import com.kathlg.flowit.ui.home.HomeActivity
+import com.google.firebase.auth.FirebaseAuth
+
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+// Si ya estamos autenticados, saltamos al Home
+        auth.currentUser?.let {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -27,23 +41,32 @@ class MainActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnLogin.setOnClickListener {
-            val usuario = etUsuario.text.toString().trim()
-            val password = etPassword.text.toString().trim()
+            val email = etUsuario.text.toString().trim()
+            val pass  = etPassword.text.toString().trim()
 
-            when {
-                usuario.isEmpty() || password.isEmpty() -> {
-                    Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
-                }
-                usuario != "admin" || password != "1234" -> {
-                    Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(this, "Bienvenido/a $usuario", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+            // 1) Validación básica de campos
+            if (email.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            // 2) Intentamos iniciar sesión con Firebase Auth
+            auth.signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // 3a) Login correcto: vamos al Home
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        finish()
+                    } else {
+                        // 3b) Error de autenticación
+                        Toast.makeText(
+                            this,
+                            "Error de autenticación: ${task.exception?.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
         }
+
     }
 }

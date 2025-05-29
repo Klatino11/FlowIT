@@ -1,12 +1,19 @@
 package com.kathlg.flowit.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
+import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.R
 import com.kathlg.flowit.data.repository.DispositivosRepository
 import com.kathlg.flowit.data.repository.DepartamentosRepository
@@ -21,11 +28,15 @@ import com.kathlg.flowit.ui.dispositivos.DispositivosViewModelFactory
 import com.kathlg.flowit.ui.empleados.EmpleadoViewModelFactory
 import com.kathlg.flowit.ui.empleados.EmpleadosAdapter
 import com.kathlg.flowit.ui.empleados.EmpleadosViewModel
+import com.kathlg.flowit.ui.login.MainActivity
 import com.kathlg.flowit.ui.oficinas.OficinaAdapter
 import com.kathlg.flowit.ui.oficinas.OficinasViewModel
 import com.kathlg.flowit.ui.oficinas.OficinaViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
+
+    // Mantengo la referencia para poder dismiss() más tarde
+    private var userDialog: AlertDialog? = null
 
     private val viewModel: DispositivosViewModel by viewModels {
         DispositivosViewModelFactory(DispositivosRepository())
@@ -109,10 +120,77 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun showUsuarioDialog() {
-        // … tu código de diálogo existente …
+        // 1) Infla tu layout de diálogo
+        val dialogView = layoutInflater.inflate(R.layout.dialog_usuario, null)
+
+        // 2) Obtén referencias a las vistas dentro del diálogo
+        val ivAvatar        = dialogView.findViewById<ImageView>(R.id.ivAvatar)
+        val tvNombreUsuario = dialogView.findViewById<TextView>(R.id.tvNombreUsuario)
+        val tvCorreoUsuario = dialogView.findViewById<TextView>(R.id.tvCorreoUsuario)
+        val btnVerPerfil    = dialogView.findViewById<Button>(R.id.btnVerPerfil)
+        val btnCerrarSesion = dialogView.findViewById<Button>(R.id.btnCerrarSesion)
+
+        // 3) Rellena datos del usuario actual (FirebaseAuth)
+        val user = FirebaseAuth.getInstance().currentUser
+        tvNombreUsuario.text = user?.displayName ?: "Usuario desconocido"
+        tvCorreoUsuario.text = user?.email       ?: ""
+
+        // 4) Crea y muestra el AlertDialog
+        userDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+            .also { it.show() }
+
+        // 5) Configura acciones de los botones
+        btnVerPerfil.setOnClickListener {
+            // Aquí podrías lanzar una actividad de perfil, p.ej.:
+            // startActivity(Intent(this, ProfileActivity::class.java))
+            Toast.makeText(this, "Ver perfil no implementado aún", Toast.LENGTH_SHORT).show()
+        }
+
+        btnCerrarSesion.setOnClickListener {
+            // 1) Inflo mi layout de confirmación
+            val confirmView = layoutInflater.inflate(
+                R.layout.dialog_confirm_logout,
+                null
+            )
+
+            // 2) Referencias
+            val btnNo = confirmView.findViewById<Button>(R.id.btnNo)
+            val btnSi = confirmView.findViewById<Button>(R.id.btnSi)
+
+            // 3) Creo el AlertDialog con la vista inflada
+            val confirmDialog = AlertDialog.Builder(this)
+                .setView(confirmView)
+                .setCancelable(true)
+                .create()
+                .also { it.show() }
+
+            // 4) Acciones de los botones
+            btnNo.setOnClickListener {
+                confirmDialog.dismiss()
+            }
+            btnSi.setOnClickListener {
+                // cerrar ambos diálogos
+                confirmDialog.dismiss()
+                userDialog?.dismiss()
+                // cerrar sesión y volver al login
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        }
+
     }
 
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        userDialog?.dismiss()
+        userDialog = null
+        super.onDestroy()
     }
 }
