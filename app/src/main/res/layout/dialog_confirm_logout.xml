@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog_rounded">  <!-- tu fondo redondeado -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <!-- Mensaje -->
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:src="@drawable/ic_warning"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:padding="8dp"
+            android:contentDescription="Avatar" />
+
+        <TextView
+            android:id="@+id/tvConfirmMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="¿Seguro que quieres cerrar sesión?"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:layout_marginEnd="16dp"/>
+
+        <Button
+            android:id="@+id/btnSi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sí"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+    </LinearLayout>
+</LinearLayout>

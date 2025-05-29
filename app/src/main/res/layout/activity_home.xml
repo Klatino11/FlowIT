@@ -21,15 +21,76 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <FrameLayout
-        android:id="@+id/flContent"
+    <LinearLayout
+        android:id="@+id/llMainContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:orientation="horizontal"
         android:background="#E0F4FB"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/navigationRail"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+        <LinearLayout
+            android:id="@+id/lyListado"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Barra de búsqueda y botón de filtro -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.search.SearchBar
+                    android:id="@+id/searchBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Buscar dispositivo"
+                    android:textColor="@color/flowit_azul_oscuro"
+                    android:textColorHint="@color/flowit_azul_intermedio"
+                    app:strokeColor="@color/flowit_turquesa"
+                    app:strokeWidth="1dp"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="@android:color/transparent" />
+
+                <ImageView
+                    android:id="@+id/ivFiltrar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="Filtrar"
+                    android:src="@drawable/ic_filtro"
+                    app:tint="@color/flowit_turquesa" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListado"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false" />
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:id="@+id/flDetalles"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:padding="16dp"
+            android:background="#E0F4FB" />
+
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
