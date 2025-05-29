@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.login
+package com.kathlg.flowit.ui.authentication.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kathlg.flowit.R
-import com.kathlg.flowit.ui.home.HomeActivity
+import com.kathlg.flowit.ui.navegation.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.SessionManager
-import com.kathlg.flowit.ui.auth.AuthState
-import com.kathlg.flowit.ui.auth.AuthViewModel
+import com.kathlg.flowit.ui.authentication.auth.AuthState
+import com.kathlg.flowit.ui.authentication.auth.AuthViewModel
 
 
 class MainActivity : AppCompatActivity() {

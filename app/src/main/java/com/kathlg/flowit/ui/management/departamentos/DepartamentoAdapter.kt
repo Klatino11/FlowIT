@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.departamentos
+package com.kathlg.flowit.ui.management.departamentos
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

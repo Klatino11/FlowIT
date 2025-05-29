@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.oficinas
+package com.kathlg.flowit.ui.management.tiposdispositivos
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.kathlg.flowit.data.model.Oficina
 import com.kathlg.flowit.data.repository.OficinasRepository
 
-class OficinasViewModel(
+class TiposDispositivoViewModel(
     private val repo: OficinasRepository
 ) : ViewModel() {
 

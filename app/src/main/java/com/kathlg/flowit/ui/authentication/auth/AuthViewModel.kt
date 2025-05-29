@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.auth
+package com.kathlg.flowit.ui.authentication.auth
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

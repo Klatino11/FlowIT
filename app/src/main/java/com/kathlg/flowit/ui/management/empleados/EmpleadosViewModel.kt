@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.empleados
+package com.kathlg.flowit.ui.management.empleados
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.kathlg.flowit.ui.home
+package com.kathlg.flowit.ui.navegation.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,19 +19,19 @@ import com.kathlg.flowit.data.repository.DispositivosRepository
 import com.kathlg.flowit.data.repository.DepartamentosRepository
 import com.kathlg.flowit.data.repository.EmpleadosRepository
 import com.kathlg.flowit.data.repository.OficinasRepository
-import com.kathlg.flowit.ui.departamentos.DepartamentoAdapter
-import com.kathlg.flowit.ui.departamentos.DepartamentosViewModel
-import com.kathlg.flowit.ui.departamentos.DepartamentosViewModelFactory
-import com.kathlg.flowit.ui.dispositivos.DispositivoAdapter
-import com.kathlg.flowit.ui.dispositivos.DispositivosViewModel
-import com.kathlg.flowit.ui.dispositivos.DispositivosViewModelFactory
-import com.kathlg.flowit.ui.empleados.EmpleadoViewModelFactory
-import com.kathlg.flowit.ui.empleados.EmpleadosAdapter
-import com.kathlg.flowit.ui.empleados.EmpleadosViewModel
-import com.kathlg.flowit.ui.login.MainActivity
-import com.kathlg.flowit.ui.oficinas.OficinaAdapter
-import com.kathlg.flowit.ui.oficinas.OficinasViewModel
-import com.kathlg.flowit.ui.oficinas.OficinaViewModelFactory
+import com.kathlg.flowit.ui.management.departamentos.DepartamentoAdapter
+import com.kathlg.flowit.ui.management.departamentos.DepartamentosViewModel
+import com.kathlg.flowit.ui.management.departamentos.DepartamentosViewModelFactory
+import com.kathlg.flowit.ui.management.dispositivos.DispositivoAdapter
+import com.kathlg.flowit.ui.management.dispositivos.DispositivosViewModel
+import com.kathlg.flowit.ui.management.dispositivos.DispositivosViewModelFactory
+import com.kathlg.flowit.ui.management.empleados.EmpleadoViewModelFactory
+import com.kathlg.flowit.ui.management.empleados.EmpleadosAdapter
+import com.kathlg.flowit.ui.management.empleados.EmpleadosViewModel
+import com.kathlg.flowit.ui.authentication.login.MainActivity
+import com.kathlg.flowit.ui.management.oficinas.OficinaAdapter
+import com.kathlg.flowit.ui.management.oficinas.OficinasViewModel
+import com.kathlg.flowit.ui.management.oficinas.OficinaViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
 
