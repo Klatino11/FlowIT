@@ -142,8 +142,8 @@ class HomeActivity : AppCompatActivity() {
 
         // 3) Rellena datos del usuario actual (FirebaseAuth)
         val user = FirebaseAuth.getInstance().currentUser
-        tvNombreUsuario.text = user?.displayName ?: "Usuario desconocido"
-        tvCorreoUsuario.text = user?.email       ?: ""
+        tvNombreUsuario.text = empleado?.nombre ?: "Usuario desconocido"
+        tvCorreoUsuario.text = empleado?.email  ?: ""
 
         // 4) Crea y muestra el AlertDialog
         userDialog = AlertDialog.Builder(this)

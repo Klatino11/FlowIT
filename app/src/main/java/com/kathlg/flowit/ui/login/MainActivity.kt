@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.kathlg.flowit.R
 import com.kathlg.flowit.ui.home.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.kathlg.flowit.SessionManager
 import com.kathlg.flowit.ui.auth.AuthState
 import com.kathlg.flowit.ui.auth.AuthViewModel
 
@@ -25,13 +26,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
-// Si ya estamos autenticados, saltamos al Home
-        auth.currentUser?.let {
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
-            return
-        }
 
+        FirebaseAuth.getInstance().signOut()
+        SessionManager.currentEmpleado = null
         setContentView(R.layout.activity_main)
 
         authViewModel.authState.observe(this) { state ->
