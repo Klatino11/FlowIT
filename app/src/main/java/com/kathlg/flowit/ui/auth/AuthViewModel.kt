@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.kathlg.flowit.SessionManager
 import com.kathlg.flowit.data.model.Empleado
 import com.kathlg.flowit.data.repository.EmpleadosRepository
 import kotlinx.coroutines.launch
@@ -43,16 +44,15 @@ class AuthViewModel(
                 viewModelScope.launch {
                     val emp = repo.getEmpleadoByEmail(email)
                     if (emp == null) {
-                        // correo no registrado en Empleados
                         _authState.postValue(AuthState.Error("Email no registrado en la empresa"))
                     } else {
-                        // verificar departamento
                         val depto = emp.departamento.lowercase()
                         if (depto == "sistemas" || depto == "laboral") {
+                            // Guardamos el empleado en sesión
+                            SessionManager.currentEmpleado = emp
                             _authState.postValue(AuthState.Success(emp))
                         } else {
-                            // usuario sin permiso
-                            firebaseAuth.signOut()  // cerrar la sesión de Firebase
+                            firebaseAuth.signOut()
                             _authState.postValue(AuthState.Unauthorized)
                         }
                     }

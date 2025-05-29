@@ -11,7 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.kathlg.flowit.SessionManager
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.R
@@ -55,26 +55,32 @@ class HomeActivity : AppCompatActivity() {
         DepartamentosViewModelFactory(DepartamentosRepository())
     }
 
+    val empleado = SessionManager.currentEmpleado
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // 1) Instanciar RecyclerView sin contenido por defecto
         val rvListado = findViewById<RecyclerView>(R.id.rvListado).apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             setHasFixedSize(true)
-            adapter = DispositivoAdapter(emptyList()) { dispositivo ->
-                Toast.makeText(this@HomeActivity,
-                    "Seleccionado: ${dispositivo.nombre}",
-                    Toast.LENGTH_SHORT).show()
-            }
         }
 
-        // Observador inicial de dispositivos
-        viewModel.devices.observe(this) { lista ->
-            (rvListado.adapter as DispositivoAdapter).updateData(lista)
-        }
-
+        // 2) Referencia al NavigationRail
         val navigationRail = findViewById<NavigationRailView>(R.id.navigationRail)
+
+        // 3) Ocultar la opción que no corresponda al departamento
+        val depto = empleado?.departamento?.lowercase()
+        if (depto == "sistemas") {
+            // Sistemas no ve "Departamentos"
+            navigationRail.menu.findItem(R.id.nav_departamentos).isVisible = false
+        } else if (depto == "laboral") {
+            // Laboral no ve "Dispositivos"
+            navigationRail.menu.findItem(R.id.nav_dispositivos).isVisible = false
+        }
+
+        // 4) Registrar el listener ANTES de forzar selección
         navigationRail.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_dispositivos -> {
@@ -87,9 +93,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.nav_empleados -> {
                     val empAdapter = EmpleadosAdapter(emptyList()) { e ->
-                        Toast.makeText(this@HomeActivity,
-                            "Seleccionado: ${e.nombre}",
-                            Toast.LENGTH_SHORT).show()
+                        showToast("Seleccionado: ${e.nombre}")
                     }
                     rvListado.adapter = empAdapter
                     empleadosViewModel.empleados.observe(this) { empAdapter.updateData(it) }
@@ -108,15 +112,21 @@ class HomeActivity : AppCompatActivity() {
                         showToast("Seleccionado: ${d.nombre}")
                     }
                     rvListado.adapter = deptAdapter
-                    departamentosViewModel.departamentos.observe(this) {
-                        deptAdapter.updateData(it)
-                    }
+                    departamentosViewModel.departamentos.observe(this) { deptAdapter.updateData(it) }
                     departamentosViewModel.loadDepartamentos()
                 }
                 R.id.nav_usuario -> showUsuarioDialog()
             }
             true
         }
+
+        // 5) Forzar la selección inicial según rol
+        val initialItemId = when (depto) {
+            "laboral"  -> R.id.nav_empleados
+            "sistemas" -> R.id.nav_dispositivos
+            else       -> R.id.nav_dispositivos
+        }
+        navigationRail.selectedItemId = initialItemId
     }
 
     private fun showUsuarioDialog() {
