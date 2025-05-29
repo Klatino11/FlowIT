@@ -6,5 +6,6 @@ data class Empleado(
     val departamento: String,
     val tipoDocumento: String,
     val numeroDocumento: String,
-    val oficina: String
+    val oficina: String,
+    val email: String
 )

@@ -15,19 +15,38 @@ class EmpleadosRepository {
             Empleado(
                 nombre = "Juan Pérez",
                 numeroEmpleado = "EMP001",
-                departamento = "Ventas",
-                tipoDocumento = "DNI",
+                departamento = "Sistemas",
+                tipoDocumento = "NIF",
                 numeroDocumento = "12345678A",
-                oficina = "OF001"
+                oficina = "OF001",
+                email = "sistemas@educat.com"
             ),
             Empleado(
                 nombre = "María García",
                 numeroEmpleado = "EMP002",
-                departamento = "Marketing",
-                tipoDocumento = "Pasaporte",
+                departamento = "Laboral",
+                tipoDocumento = "NIE",
                 numeroDocumento = "X1234567",
-                oficina = "OF002"
+                oficina = "OF002",
+                email = "laboral@educat.com"
+            ),
+            Empleado(
+                nombre = "Userprueba",
+                numeroEmpleado = "EMP002",
+                departamento = "Aleatorio",
+                tipoDocumento = "NIE",
+                numeroDocumento = "X1234567",
+                oficina = "OF002",
+                email = "userprueba@educat.es"
             )
         )
+    }
+
+    /**
+     * Busca un empleado por su correo.
+     * Devuelve null si no encuentra ninguno.
+     */
+    suspend fun getEmpleadoByEmail(email: String): Empleado? = withContext(Dispatchers.IO) {
+        obtenerEmpleados().firstOrNull { it.email.equals(email, ignoreCase = true) }
     }
 }
