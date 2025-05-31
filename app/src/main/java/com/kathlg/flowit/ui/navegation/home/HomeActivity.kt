@@ -19,6 +19,7 @@ import com.kathlg.flowit.data.repository.DispositivosRepository
 import com.kathlg.flowit.data.repository.DepartamentosRepository
 import com.kathlg.flowit.data.repository.EmpleadosRepository
 import com.kathlg.flowit.data.repository.OficinasRepository
+import com.kathlg.flowit.data.repository.TiposDispositivosRepository
 import com.kathlg.flowit.ui.management.departamentos.DepartamentoAdapter
 import com.kathlg.flowit.ui.management.departamentos.DepartamentosViewModel
 import com.kathlg.flowit.ui.management.departamentos.DepartamentosViewModelFactory
@@ -32,11 +33,17 @@ import com.kathlg.flowit.ui.authentication.login.MainActivity
 import com.kathlg.flowit.ui.management.oficinas.OficinaAdapter
 import com.kathlg.flowit.ui.management.oficinas.OficinasViewModel
 import com.kathlg.flowit.ui.management.oficinas.OficinaViewModelFactory
+import com.kathlg.flowit.ui.management.tiposdispositivos.TipoDispositivoViewModelFactory
+import com.kathlg.flowit.ui.management.tiposdispositivos.TiposDispositivoViewModel
 
 class HomeActivity : AppCompatActivity() {
 
     // Mantengo la referencia para poder dismiss() más tarde
     private var userDialog: AlertDialog? = null
+
+    private val tiposViewModel: TiposDispositivoViewModel by viewModels {
+        TipoDispositivoViewModelFactory(TiposDispositivosRepository())
+    }
 
     private val viewModel: DispositivosViewModel by viewModels {
         DispositivosViewModelFactory(DispositivosRepository())
@@ -60,6 +67,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        tiposViewModel.cargarTiposDispositivos()
+        tiposViewModel.probarConexionFirestore()
 
         // 1) Instanciar RecyclerView sin contenido por defecto
         val rvListado = findViewById<RecyclerView>(R.id.rvListado).apply {
@@ -78,6 +87,20 @@ class HomeActivity : AppCompatActivity() {
         } else if (depto == "laboral") {
             // Laboral no ve "Dispositivos"
             navigationRail.menu.findItem(R.id.nav_dispositivos).isVisible = false
+        }
+        tiposViewModel.tipos.observe(this) { listaTipos ->
+            if (listaTipos.isNotEmpty()) {
+                // 1) Extraer solo los prefijos
+                val prefijos = listaTipos.map { it.prefijo }
+                // 2) Unirlos con comas
+                val textoToast = prefijos.joinToString(separator = ", ")
+                // 3) Mostrar en un Toast
+                Toast.makeText(
+                    this,
+                    "Prefijos disponibles: $textoToast",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
         // 4) Registrar el listener ANTES de forzar selección

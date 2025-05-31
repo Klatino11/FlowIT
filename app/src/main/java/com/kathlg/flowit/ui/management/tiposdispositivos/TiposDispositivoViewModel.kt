@@ -1,25 +1,53 @@
 package com.kathlg.flowit.ui.management.tiposdispositivos
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kathlg.flowit.data.model.Oficina
-import com.kathlg.flowit.data.repository.OficinasRepository
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FirebaseFirestore
+import com.kathlg.flowit.data.model.TipoDispositivo
+import com.kathlg.flowit.data.repository.TiposDispositivosRepository
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
+/**
+ * ViewModel que expone la lista de TipoDispositivo desde Firestore.
+ */
 class TiposDispositivoViewModel(
-    private val repo: OficinasRepository
+    private val repo: TiposDispositivosRepository
 ) : ViewModel() {
 
-    // Backing LiveData mutable
-    private val _oficinas = MutableLiveData<List<Oficina>>()
-    // Expuesto como sólo lectura
-    val oficinas: LiveData<List<Oficina>> = _oficinas
+    // LiveData interno mutable
+    private val _tipos = MutableLiveData<List<TipoDispositivo>>()
+    // Expuesto como solo lectura
+    val tipos: LiveData<List<TipoDispositivo>> = _tipos
 
     /**
-     * Carga las oficinas desde el repositorio y publica en el LiveData.
+     * Lanza la carga de tipos de dispositivos desde el repositorio.
      */
-    fun cargarOficinas() {
-        val lista = repo.getOficinas()
-        _oficinas.value = lista
+    fun cargarTiposDispositivos() {
+        viewModelScope.launch {
+            // Llamamos al repositorio (suspend) y publicamos la lista
+            val lista = repo.obtenerTiposDispositivos()
+            _tipos.value = lista
+        }
+    }
+
+    fun probarConexionFirestore() {
+        viewModelScope.launch {
+            try {
+                val snapshot = FirebaseFirestore.getInstance()
+                    .collection("TiposDispositivos")
+                    .get()
+                    .await()
+                Log.d("FirestoreTest", "Documentos encontrados: ${snapshot.size()}")
+                for (doc in snapshot.documents) {
+                    Log.d("FirestoreTest", " → ${doc.id}: ${doc.data}")
+                }
+            } catch (e: Exception) {
+                Log.e("FirestoreTest", "Error al leer Firestore: ${e.message}", e)
+            }
+        }
     }
 }
