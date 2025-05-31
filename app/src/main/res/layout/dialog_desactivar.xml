@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutDesactivar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_detalle"
+    android:layout_margin="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloDesactivar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del elemento (Desactivar)"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Motivo de baja -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Motivo de baja"
+        android:textSize="15sp"
+        android:textColor="@color/flowit_negro"
+        android:layout_marginBottom="6dp" />
+
+    <EditText
+        android:id="@+id/etMotivoBaja"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:gravity="top|start"
+        android:hint="Escribe el motivo"
+        android:textColorHint="@color/flowit_azul_intermedio"
+        android:textColor="@color/flowit_azul_oscuro" />
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnCancelarDesactivar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:backgroundTint="@color/flowit_azul_intermedio"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnConfirmarDesactivar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Desactivar"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

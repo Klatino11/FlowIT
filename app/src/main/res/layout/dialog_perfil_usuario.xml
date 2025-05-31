@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:orientation="vertical"
+    android:background="@drawable/fondo_detalle">
+
+    <!-- Icono -->
+    <ImageView
+        android:id="@+id/ivPerfil"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_usuario"
+        android:contentDescription="Foto usuario"
+        android:layout_gravity="center"
+        app:tint="@color/flowit_azul_oscuro"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Nombre -->
+    <TextView
+        android:id="@+id/tvNombrePerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre usuario"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:layout_gravity="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/tvEmailPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email@email.com"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_azul_intermedio"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Departamento -->
+    <TextView
+        android:id="@+id/tvDepartamentoPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Departamento"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_negro"
+        android:layout_gravity="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Oficina -->
+    <TextView
+        android:id="@+id/tvOficinaPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Oficina"
+        android:textSize="14sp"
+        android:textColor="@color/flowit_negro"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botón OK -->
+    <Button
+        android:id="@+id/btnCerrarPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:backgroundTint="@color/flowit_azul_oscuro"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center" />
+</LinearLayout>

@@ -67,4 +67,14 @@ class DepartamentosRepository {
             emptyList()
         }
     }
+
+    suspend fun getNombreDepartamentoPorId(id: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val doc = FirebaseFirestore.getInstance().collection("Departamentos").document(id).get().await()
+            doc.getString("Nombre")
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }

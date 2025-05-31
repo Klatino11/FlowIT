@@ -8,10 +8,10 @@ class DispositivosRepository {
     fun getAllDispositivos(): List<Dispositivo> {
         return listOf(
             Dispositivo(
-                nombre = "MOB-001",
+                nombre = "MVL0001",
                 tipo = "Móvil",
-                codigoEmpleado = "EMP001",
-                codigoOficina = "OF001",
+                codigoEmpleado = "EMP0001",
+                codigoOficina = "OF0001",
                 ramGb = 4,
                 modelo = "Galaxy A12",
                 marca = "Samsung",
@@ -21,10 +21,10 @@ class DispositivosRepository {
                 teamviewerInstalado = true
             ),
             Dispositivo(
-                nombre = "PC-001",
+                nombre = "PRT0001",
                 tipo = "Portátil",
-                codigoEmpleado = "EMP002",
-                codigoOficina = "OF002",
+                codigoEmpleado = "EMP0003",
+                codigoOficina = "OF0001",
                 ramGb = 8,
                 modelo = "ThinkPad L14",
                 marca = "Lenovo",

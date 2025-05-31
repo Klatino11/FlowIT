@@ -7,4 +7,5 @@
     <color name="flowit_azul_intermedio">#2982B2</color>
     <color name="flowit_blanco">#FFFFFF</color>
     <color name="flowit_negro">#000000</color>
+    <color name="HintTexts">#55727A</color>
 </resources>

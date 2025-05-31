@@ -97,6 +97,16 @@ class OficinasRepository {
             emptyList()
         }
     }
+    suspend fun getDireccionCiudadPorId(id: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val doc = FirebaseFirestore.getInstance().collection("Oficinas").document(id).get().await()
+            val direccion = doc.getString("Direccion")
+            val ciudad = doc.getString("Ciudad")
+            if (direccion != null && ciudad != null) "$direccion, $ciudad" else null
+        } catch (e: Exception) {
+            null
+        }
+    }
 
 
 }
