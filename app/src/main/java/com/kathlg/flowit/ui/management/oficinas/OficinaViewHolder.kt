@@ -12,7 +12,7 @@ class OficinaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvCiudad: TextView = view.findViewById(R.id.tvCiudadOficina)
 
     fun bind(oficina: Oficina) {
-        tvNombre.text = oficina.nombre
+        tvNombre.text = oficina.codigo
         tvDireccion.text = "Dirección: ${oficina.direccion}"
         tvCiudad.text = "Ciudad: ${oficina.ciudad}"
     }

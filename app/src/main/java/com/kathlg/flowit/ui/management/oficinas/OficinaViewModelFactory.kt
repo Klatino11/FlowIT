@@ -1,3 +1,4 @@
+// OficinaViewModelFactory.kt
 package com.kathlg.flowit.ui.management.oficinas
 
 import androidx.lifecycle.ViewModel
@@ -8,11 +9,11 @@ class OficinaViewModelFactory(
     private val repo: OficinasRepository
 ) : ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(OficinasViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return OficinasViewModel(repo) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -12,4 +12,7 @@
     <style name="ThemeOverlay.Material3.NoRipple" parent="">
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
+    <style name="RoundedSearchBox" parent="">
+        <item name="cornerSize">24dp</item>
+    </style>
 </resources>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutDetalleEmpleado"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/fondo_detalle">
+
+
+    <LinearLayout
+        android:id="@+id/contenidoEmpleado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDetalleNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="10dp"
+            android:text="Vanesa Revuelto"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/flowit_azul_oscuro" />
+
+        <TextView
+            android:id="@+id/tvDetalleEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:text="sistemas@educat.com"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_azul_intermedio" />
+
+        <TextView
+            android:id="@+id/tvDetalleDocumento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="NIF: 44174864Y"
+            android:textColor="@color/flowit_negro" />
+
+        <TextView
+            android:id="@+id/tvDetalleDepartamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Departamento: Sistemas"
+            android:textColor="@color/flowit_negro" />
+
+        <TextView
+            android:id="@+id/tvDetalleOficina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="10dp"
+            android:text="Oficina: Beethoven, Zaragoza"
+            android:textColor="@color/flowit_negro" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnEditarEmpleado"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="190dp"
+        android:contentDescription="Editar"
+        android:src="@drawable/ic_editar"
+        app:tint="@color/flowit_turquesa" />
+
+    <!-- Botón desactivar -->
+    <ImageView
+        android:id="@+id/btnDesactivarEmpleado"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:contentDescription="Desactivar"
+        android:src="@drawable/ic_desactivar"
+        app:tint="@color/flowit_turquesa" />
+</RelativeLayout>

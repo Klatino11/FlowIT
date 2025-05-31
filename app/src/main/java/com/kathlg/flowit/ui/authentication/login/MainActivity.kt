@@ -12,12 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.kathlg.flowit.R
-import com.kathlg.flowit.ui.navegation.home.HomeActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.SessionManager
 import com.kathlg.flowit.ui.authentication.auth.AuthState
 import com.kathlg.flowit.ui.authentication.auth.AuthViewModel
-
+import com.kathlg.flowit.ui.navegation.home.HomeActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,58 +26,76 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 1) Limpiar cualquier sesión previa
         auth = FirebaseAuth.getInstance()
-
-        FirebaseAuth.getInstance().signOut()
+        auth.signOut()
         SessionManager.currentEmpleado = null
+
+        // 2) Inflar layout de login
         setContentView(R.layout.activity_main)
 
+        // 3) Referencias a vistas
+        val etUsuario = findViewById<EditText>(R.id.etUsuario)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
         val pbLoading = findViewById<ProgressBar>(R.id.pbLoading)
 
+        // 4) Observador de estado de autenticación
         authViewModel.authState.observe(this) { state ->
             when (state) {
                 is AuthState.Loading -> {
                     pbLoading.visibility = View.VISIBLE
+                    btnLogin.isEnabled = false
                 }
                 is AuthState.Success -> {
                     pbLoading.visibility = View.GONE
-                    // Login + permiso OK: abre Home pasando el empleado si lo necesitas
+                    btnLogin.isEnabled = true
+                    // Navegar a HomeActivity
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 }
                 is AuthState.Unauthorized -> {
-                    Toast.makeText(this,
+                    pbLoading.visibility = View.GONE
+                    btnLogin.isEnabled = true
+                    Toast.makeText(
+                        this,
                         "No tienes permiso para acceder a esta aplicación",
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
                 is AuthState.Error -> {
-                    Toast.makeText(this,
+                    pbLoading.visibility = View.GONE
+                    btnLogin.isEnabled = true
+                    Toast.makeText(
+                        this,
                         state.message,
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
 
+        // 5) Ajustar insets de sistema (opcional)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val etUsuario = findViewById<EditText>(R.id.etUsuario)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-
+        // 6) Lógica del botón Login
         btnLogin.setOnClickListener {
             val email = etUsuario.text.toString().trim()
-            val pass  = etPassword.text.toString().trim()
+            val pass = etPassword.text.toString().trim()
             if (email.isEmpty() || pass.isEmpty()) {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Por favor, completa todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
-            // Lanza la autenticación coordinada
+            // Iniciar autenticación coordinada
             authViewModel.signIn(email, pass)
         }
-
     }
 }

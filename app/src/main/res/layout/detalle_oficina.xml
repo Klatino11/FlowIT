@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutDetalleOficina"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/fondo_detalle"
+
+    >
+
+    <!-- Código (solo valor) -->
+    <TextView
+        android:id="@+id/tvDetalleCodigo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="OFI0001"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="@color/flowit_azul_oscuro" />
+
+    <!-- Dirección (solo valor) -->
+    <TextView
+        android:id="@+id/tvDetalleDireccion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:text="C. Beethoven, 56"
+        android:textSize="15sp"
+        android:textColor="@color/flowit_azul_intermedio" />
+
+    <!-- Ciudad (solo valor) -->
+
+    <TextView
+        android:id="@+id/tvDetalleCiudad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:text="Zaragoza"
+        android:textSize="15sp"
+        android:textColor="@color/flowit_azul_intermedio" />
+
+    <!-- Etiqueta + valor -->
+
+    <TextView
+        android:id="@+id/tvDetallePuestosTrabajo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Puestos de trabajo: 0"
+        android:textColor="@color/flowit_negro" />
+
+    <TextView
+        android:id="@+id/tvDetallePuestosAlumnos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Puestos de alumnos: ñ"
+        android:textColor="@color/flowit_negro" />
+
+    <TextView
+        android:id="@+id/tvDetallePuestosTeletrabajo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Puestos de teletrabajo: o"
+        android:textColor="@color/flowit_negro" />
+</LinearLayout>

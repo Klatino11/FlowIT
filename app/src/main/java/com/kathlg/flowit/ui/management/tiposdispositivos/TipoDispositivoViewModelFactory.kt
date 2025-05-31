@@ -1,18 +1,18 @@
+// TipoDispositivoViewModelFactory.kt
 package com.kathlg.flowit.ui.management.tiposdispositivos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kathlg.flowit.data.repository.OficinasRepository
+import com.kathlg.flowit.data.repository.TiposDispositivosRepository
 
 class TipoDispositivoViewModelFactory(
-    private val repo: OficinasRepository
+    private val repo: TiposDispositivosRepository
 ) : ViewModelProvider.Factory {
-
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TiposDispositivoViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return TiposDispositivoViewModel(repo) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

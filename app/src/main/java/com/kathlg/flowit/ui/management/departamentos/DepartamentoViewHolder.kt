@@ -11,7 +11,7 @@ class DepartamentoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvNombre: TextView = view.findViewById(R.id.tvNombreDepartamento)
 
     fun bind(depto: Departamento) {
-        tvCodigo.text = "Código: ${depto.codigo}"
+        tvCodigo.text = "${depto.codigo}"
         tvNombre.text = "Nombre: ${depto.nombre}"
     }
 }
