@@ -19,6 +19,8 @@ import com.google.android.material.navigationrail.NavigationRailView
 import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.R
 import com.kathlg.flowit.SessionManager
+import com.kathlg.flowit.data.model.Departamento
+import com.kathlg.flowit.data.model.Oficina
 import com.kathlg.flowit.data.repository.*
 import com.kathlg.flowit.ui.authentication.login.MainActivity
 import com.kathlg.flowit.ui.management.departamentos.*
@@ -86,81 +88,23 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        val fabCrear = findViewById<FloatingActionButton>(R.id.fabCrearRegistro).setOnClickListener {
-            val view = layoutInflater.inflate(R.layout.dialog_nuevo_empleado, null)
-            val etNombre = view.findViewById<EditText>(R.id.etNombreEmpleado)
-            val etNumeroDoc = view.findViewById<EditText>(R.id.etNumeroDocumento)
-            val spDepartamento = view.findViewById<Spinner>(R.id.spDepartamento)
-            val spTipoDoc = view.findViewById<Spinner>(R.id.spTipoDocumento)
-            val spOficina = view.findViewById<Spinner>(R.id.spOficina)
-            val btnCrear = view.findViewById<Button>(R.id.btnCrearNuevo)
-            val btnCancelar = view.findViewById<Button>(R.id.btnCancelarNuevo)
-
-            val dialog = AlertDialog.Builder(this)
-                .setView(view)
-                .setCancelable(true)
-                .create()
-
-            // Cargar departamentos y oficinas desde el ViewModel
+        val fabCrear = findViewById<FloatingActionButton>(R.id.fabCrearRegistro)
+        fabCrear.setOnClickListener {
             lifecycleScope.launch {
-                val departamentos = departamentosViewModel.departamentosFiltrados.value ?: emptyList()
-                val oficinas = oficinasViewModel.oficinasFiltradas.value ?: emptyList()
+                val listaDeptos = departamentosViewModel.departamentosFiltrados.value.orEmpty()
+                val listaOfis = oficinasViewModel.oficinasFiltradas.value.orEmpty()
 
-                spDepartamento.adapter = ArrayAdapter(this@HomeActivity, android.R.layout.simple_spinner_dropdown_item, departamentos.map { it.nombre })
-                spOficina.adapter = ArrayAdapter(this@HomeActivity, android.R.layout.simple_spinner_dropdown_item, oficinas.map { it.codigo })
-                spTipoDoc.adapter = ArrayAdapter(this@HomeActivity, android.R.layout.simple_spinner_dropdown_item, listOf("NIF", "NIE"))
-            }
-
-            btnCancelar.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            btnCrear.setOnClickListener {
-                val nombre = etNombre.text.toString().trim()
-                val docNum = etNumeroDoc.text.toString().trim()
-                val tipoDoc = spTipoDoc.selectedItem?.toString()?.trim() ?: ""
-                val deptoNombre = spDepartamento.selectedItem?.toString()?.trim() ?: ""
-                val oficinaCodigo = spOficina.selectedItem?.toString()?.trim() ?: ""
-
-                if (nombre.isEmpty() || docNum.isEmpty() || deptoNombre.isEmpty() || oficinaCodigo.isEmpty()) {
-                    showToast("Completa todos los campos.")
-                    return@setOnClickListener
+                if (listaDeptos.isEmpty() || listaOfis.isEmpty()) {
+                    departamentosViewModel.cargarDepartamentos()
+                    oficinasViewModel.cargarOficinas()
+                    showToast("Cargando datos, por favor intenta de nuevo en unos segundos")
+                    return@launch
                 }
 
-                // Confirmación antes de crear
-                mostrarConfirmacionCreacion(nombre) {
-                    // Obtener el ID real del departamento y oficina seleccionados
-                    val departamentoId = departamentosViewModel.departamentosFiltrados.value?.firstOrNull { it.nombre == deptoNombre }?.id ?: ""
-                    val oficinaId = oficinasViewModel.oficinasFiltradas.value?.firstOrNull { it.codigo == oficinaCodigo }?.id ?: ""
-
-                    val nuevoEmpleado = Empleado(
-                        id = "",
-                        nombre = nombre,
-                        numeroEmpleado = "", // se calcula en el repo
-                        tipoDocumento = tipoDoc,
-                        numeroDocumento = docNum,
-                        email = "",
-                        departamento = departamentoId,
-                        oficina = oficinaId,
-                        activo = true,
-                        motivoBaja = ""
-                    )
-
-                    empleadosViewModel.crearEmpleado(nuevoEmpleado) { exito ->
-                        if (exito) {
-                            showToast("Empleado creado con éxito")
-                            empleadosViewModel.cargarEmpleados()
-                        } else {
-                            showToast("Error al crear empleado")
-                        }
-                    }
-
-                    dialog.dismiss()
-                }
+                mostrarDialogoCrearEmpleado(listaDeptos, listaOfis)
             }
-
-            dialog.show()
         }
+
 
         fabExportar.setOnClickListener {
             val builder = StringBuilder()
@@ -198,7 +142,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                     builder.append("ID,Codigo,Nombre,Email,TipoDocumento,NumDocumento,Departamento,Oficina\n")
                     data.forEach {
-                        builder.append("${it.id},${it.numeroEmpleado},${it.nombre},${it.email},${it.tipoDocumento},${it.numeroDocumento},${it.departamento},${it.oficina}\n")
+                        builder.append("${it.id},${it.codigo},${it.nombre},${it.email},${it.tipoDocumento},${it.numDocumento},${it.departamento},${it.oficina}\n")
                     }
                 }
                 else -> {
@@ -242,7 +186,7 @@ class HomeActivity : AppCompatActivity() {
                         detalleView.findViewById<TextView>(R.id.tvDetalleNombre).text = empleado.nombre
                         detalleView.findViewById<TextView>(R.id.tvDetalleEmail).text = empleado.email
                         detalleView.findViewById<TextView>(R.id.tvDetalleDocumento).text =
-                            "${empleado.tipoDocumento}: ${empleado.numeroDocumento}"
+                            "${empleado.tipoDocumento}: ${empleado.numDocumento}"
 
                         detalleView.findViewById<ImageView>(R.id.btnEditarEmpleado).setOnClickListener {
                             showToast("Editar empleado")
@@ -374,6 +318,148 @@ class HomeActivity : AppCompatActivity() {
         navigationRail.selectedItemId = initialItemId
     }
 
+    private fun mostrarDialogoCrearDispositivo() {
+        TODO("Not yet implemented")
+    }
+
+    private fun mostrarDialogoCrearEmpleado(
+        listaDepartamentos: List<Departamento>,
+        listaOficinas: List<Oficina>
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_nuevo_empleado, null)
+
+        val etNombre = dialogView.findViewById<EditText>(R.id.etNombreEmpleado)
+        val spDepartamento = dialogView.findViewById<Spinner>(R.id.spDepartamento)
+        val spTipoDocumento = dialogView.findViewById<Spinner>(R.id.spTipoDocumento)
+        val etNumeroDocumento = dialogView.findViewById<EditText>(R.id.etNumeroDocumento)
+        val spOficina = dialogView.findViewById<Spinner>(R.id.spOficina)
+
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelarNuevo)
+        val btnCrear = dialogView.findViewById<Button>(R.id.btnCrearNuevo)
+
+        // Tipo de documento
+        val tiposDoc = listOf("NIF", "NIE")
+        spTipoDocumento.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tiposDoc)
+
+        // Adaptador personalizado para Departamento (mostrar nombre)
+        val adapterDepto = object : ArrayAdapter<Departamento>(
+            this, android.R.layout.simple_spinner_dropdown_item, listaDepartamentos
+        ) {
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.nombre ?: ""
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.nombre ?: ""
+                return view
+            }
+        }
+        spDepartamento.adapter = adapterDepto
+
+        // Adaptador personalizado para Oficina (mostrar ciudad + dirección)
+        val adapterOfi = object : ArrayAdapter<Oficina>(
+            this, android.R.layout.simple_spinner_dropdown_item, listaOficinas
+        ) {
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).text = "${getItem(position)?.ciudad} - ${getItem(position)?.direccion}"
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).text = "${getItem(position)?.ciudad} - ${getItem(position)?.direccion}"
+                return view
+            }
+        }
+        spOficina.adapter = adapterOfi
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+
+        btnCrear.setOnClickListener {
+            val nombre = etNombre.text.toString().trim()
+            val tipoDoc = spTipoDocumento.selectedItem.toString()
+            val docNum = etNumeroDocumento.text.toString().trim()
+
+            if (nombre.isEmpty() || docNum.isEmpty()) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val departamento = spDepartamento.selectedItem as Departamento
+            val oficina = spOficina.selectedItem as Oficina
+
+            val nuevoEmpleado = Empleado(
+                id = "",
+                nombre = nombre,
+                codigo = "",
+                tipoDocumento = tipoDoc,
+                numDocumento = docNum,
+                email = "",
+                departamento = departamento.id,
+                oficina = oficina.id,
+                activo = true,
+                motivoBaja = ""
+            )
+
+            dialog.dismiss()
+            mostrarDialogoConfirmacionCreacion(nuevoEmpleado)
+        }
+
+        dialog.show()
+    }
+
+    private fun mostrarDialogoConfirmacionCreacion(empleado: Empleado) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm, null)
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvConfirmMessage)
+        val etResumen = dialogView.findViewById<TextView>(R.id.etRegistro)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<Button>(R.id.btnConfirmar)
+
+        val resumen = """
+        Nombre: ${empleado.nombre}
+        Tipo Doc: ${empleado.tipoDocumento}
+        Nº Documento: ${empleado.numDocumento}
+        Departamento: ${empleado.departamento}
+        Oficina: ${empleado.oficina}
+    """.trimIndent()
+
+        tvMensaje.text = "¿Deseas crear este nuevo empleado?"
+        etResumen.text = resumen
+        etResumen.isEnabled = false // No editable
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+
+        btnConfirmar.setOnClickListener {
+            dialog.dismiss()
+
+            empleadosViewModel.crearEmpleado(empleado) { exito ->
+                if (exito) {
+                    Toast.makeText(this@HomeActivity, "Empleado creado correctamente", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@HomeActivity, "Error al crear el empleado", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        dialog.show()
+    }
+
+
+
     private fun mostrarPerfilUsuario() {
         val view = layoutInflater.inflate(R.layout.dialog_perfil_usuario, null)
 
@@ -484,7 +570,6 @@ class HomeActivity : AppCompatActivity() {
         val btnVerPerfil    = dialogView.findViewById<Button>(R.id.btnVerPerfil)
         val btnCerrarSesion = dialogView.findViewById<Button>(R.id.btnCerrarSesion)
 
-        val user = FirebaseAuth.getInstance().currentUser
         tvNombreUsuario.text = empleado?.nombre ?: "Usuario desconocido"
         tvCorreoUsuario.text = empleado?.email  ?: ""
 

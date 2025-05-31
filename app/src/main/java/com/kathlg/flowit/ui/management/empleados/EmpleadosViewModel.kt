@@ -26,16 +26,31 @@ class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewMode
 
     fun crearEmpleado(empleado: Empleado, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val exito = repository.crearEmpleado(empleado)
+            // 1. Obtener el siguiente código de empleado
+            val siguienteCodigo = repository.obtenerSiguienteNumeroEmpleado()
+            val empleadoCompleto = empleado.copy(
+                id = siguienteCodigo,
+                codigo = siguienteCodigo // El campo de tu modelo para código
+            )
+            // 2. Crear el empleado en Firestore
+            val exito = repository.crearEmpleado(empleadoCompleto)
             onResult(exito)
             if (exito) cargarEmpleados()
+        }
+    }
+
+
+    fun obtenerSiguienteNumeroEmpleado(onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val codigo = repository.obtenerSiguienteNumeroEmpleado()
+            onResult(codigo)
         }
     }
 
     fun buscarPorCodigo(query: String) {
         val empleadosActuales = _empleados.value ?: return
         val filtrados = empleadosActuales.filter {
-            it.numeroEmpleado.lowercase().contains(query.trim().lowercase())
+            it.codigo.lowercase().contains(query.trim().lowercase())
         }
         _empleadosFiltrados.value = filtrados
     }
