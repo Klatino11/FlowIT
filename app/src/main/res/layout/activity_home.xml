@@ -49,18 +49,28 @@
                 android:gravity="center_vertical"
                 android:layout_marginBottom="8dp">
 
-                <com.google.android.material.search.SearchBar
-                    android:id="@+id/searchBar"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Buscar registro"
-                    android:textColor="@color/flowit_azul_oscuro"
-                    android:textColorHint="@color/flowit_azul_intermedio"
-                    app:strokeColor="@color/flowit_turquesa"
-                    app:strokeWidth="1dp"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="@android:color/transparent" />
+                    android:backgroundTint="@android:color/transparent"
+                    app:boxBackgroundMode="outline"
+                    app:boxStrokeColor="@color/flowit_turquesa"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:shapeAppearanceOverlay="@style/RoundedSearchBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBuscar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Buscar registro"
+                        android:textColor="@color/flowit_azul_oscuro"
+                        android:textColorHint="@color/flowit_azul_intermedio"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
 
                 <ImageView
                     android:id="@+id/ivFiltrar"
