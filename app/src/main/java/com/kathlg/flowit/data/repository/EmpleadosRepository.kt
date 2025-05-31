@@ -34,10 +34,10 @@ class EmpleadosRepository {
                     Empleado(
                         id = doc.id,
                         nombre = nombre,
-                        numeroEmpleado = codigo,
+                        codigo = codigo,
                         email = email,
                         tipoDocumento = tipoDocumento,
-                        numeroDocumento = numeroDocumento,
+                        numDocumento = numeroDocumento,
                         departamento = refDepto.id,
                         oficina = refOficina.id,
                         activo = activo
@@ -58,31 +58,53 @@ class EmpleadosRepository {
         obtenerEmpleados().firstOrNull { it.email.equals(email, ignoreCase = true) }
     }
 
+    suspend fun obtenerSiguienteNumeroEmpleado(): String = withContext(Dispatchers.IO) {
+        try {
+            val snapshot = FirebaseFirestore.getInstance()
+                .collection("Empleados")
+                .get()
+                .await()
+
+            val codigos = snapshot.documents.mapNotNull { it.getString("Codigo") }
+            val numeros = codigos.mapNotNull { it.removePrefix("EMPL").toIntOrNull() }
+            val siguiente = (numeros.maxOrNull() ?: 0) + 1
+            "EMPL" + siguiente.toString().padStart(4, '0')
+        } catch (e: Exception) {
+            Log.e("EmpleadosRepository", "❌ Error obteniendo siguiente código", e)
+            "EMPL0001"
+        }
+    }
+
     suspend fun crearEmpleado(empleado: Empleado): Boolean = withContext(Dispatchers.IO) {
         try {
-            val db = FirebaseFirestore.getInstance()
-            val coleccion = db.collection("Empleados")
+            val firestore = FirebaseFirestore.getInstance()
+            val docRefDepto = firestore.document("Departamentos/${empleado.departamento}")
+            val docRefOfi = firestore.document("Oficinas/${empleado.oficina}")
 
-            // Obtener todos los empleados para calcular el siguiente número
-            val snapshot = coleccion.get().await()
+            // Construimos el mapa de campos tal y como los espera Firestore
+            val data = mutableMapOf<String, Any>(
+                "Nombre" to empleado.nombre,
+                "Codigo" to empleado.codigo,   // asegúrate de usar el campo correcto
+                "TipoDocumento" to empleado.tipoDocumento,
+                "NumDocumento" to empleado.numDocumento,
+                "Email" to empleado.email,
+                "Departamento" to docRefDepto,
+                "Oficina" to docRefOfi,
+                "Activo" to true
+            )
 
-            val maxNum = snapshot.documents
-                .mapNotNull { it.getString("numeroEmpleado") }
-                .mapNotNull { it.removePrefix("EMPL").toIntOrNull() }
-                .maxOrNull() ?: 0
+            // Si motivoBaja es nulo o vacío, no lo incluimos en la creación
+            if (!empleado.motivoBaja.isNullOrEmpty()) {
+                data["MotivoBaja"] = empleado.motivoBaja
+            }
 
-            val siguienteNum = maxNum + 1
-            val nuevoCodigo = "EMPL" + siguienteNum.toString().padStart(4, '0')
-
-            // Crear copia del empleado con id y numeroEmpleado ajustados
-            val empleadoFinal = empleado.copy(id = nuevoCodigo, numeroEmpleado = nuevoCodigo)
-
-            // Guardar en Firestore usando el ID personalizado
-            coleccion.document(nuevoCodigo).set(empleadoFinal).await()
-
+            firestore.collection("Empleados")
+                .document(empleado.id)
+                .set(data)
+                .await()
             true
         } catch (e: Exception) {
-            Log.e("EmpleadoRepo", "Error al crear empleado", e)
+            Log.e("EmpleadosRepository", "❌ Error al crear empleado", e)
             false
         }
     }

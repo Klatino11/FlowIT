@@ -13,7 +13,7 @@ class EmpleadosViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(empleado: Empleado) {
         tvNombre.text = empleado.nombre
-        tvNumero.text = "Nº Empleado: ${empleado.numeroEmpleado}"
+        tvNumero.text = "Código: ${empleado.codigo}"
         tvDepto.text = "Departamento: ${empleado.departamento}"
     }
 }
