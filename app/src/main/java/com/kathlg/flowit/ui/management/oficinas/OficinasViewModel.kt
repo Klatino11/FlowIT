@@ -1,6 +1,5 @@
 package com.kathlg.flowit.ui.management.oficinas
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,14 +15,21 @@ class OficinasViewModel(
     private val _oficinas = MutableLiveData<List<Oficina>>()
     val oficinas: LiveData<List<Oficina>> = _oficinas
 
+    private val _oficinasFiltradas = MutableLiveData<List<Oficina>>()
+    val oficinasFiltradas: LiveData<List<Oficina>> = _oficinasFiltradas
+
     fun cargarOficinas() {
         viewModelScope.launch {
             val lista = repo.obtenerOficinas()
-            Log.d("OficinasViewModel", "🔍 Oficinas recibidas: ${lista.size}")
-            lista.forEach {
-                Log.d("OficinasViewModel", "👉 ${it.codigo} - ${it.direccion}")
-            }
             _oficinas.value = lista
+            _oficinasFiltradas.value = lista
+        }
+    }
+
+    fun buscarPorCodigoFirestore(codigo: String) {
+        viewModelScope.launch {
+            val resultados = repo.buscarOficinasPorCodigo(codigo)
+            _oficinasFiltradas.value = resultados
         }
     }
 }

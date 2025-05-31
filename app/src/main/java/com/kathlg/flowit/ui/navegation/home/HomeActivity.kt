@@ -8,10 +8,10 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigationrail.NavigationRailView
-import com.google.android.material.search.SearchBar
 import com.google.firebase.auth.FirebaseAuth
 import com.kathlg.flowit.R
 import com.kathlg.flowit.SessionManager
@@ -80,6 +80,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         navigationRail.setOnItemSelectedListener { item ->
+            contenedor.removeAllViews()
             when (item.itemId) {
                 R.id.nav_dispositivos -> {
                     val dispAdapter = DispositivoAdapter(emptyList()) { d ->
@@ -98,7 +99,6 @@ class HomeActivity : AppCompatActivity() {
                     empleadosViewModel.cargarEmpleados()
                 }
                 R.id.nav_oficinas -> {
-                    var listaOficinas: List<com.kathlg.flowit.data.model.Oficina> = emptyList()
                     val ofAdapter = OficinaAdapter(emptyList()) { oficina ->
                         val detalleView = layoutInflater.inflate(R.layout.detalle_oficina, null)
                         detalleView.findViewById<TextView>(R.id.tvDetalleCodigo).text = oficina.codigo
@@ -114,32 +114,51 @@ class HomeActivity : AppCompatActivity() {
                         contenedor.addView(detalleView)
                     }
                     rvListado.adapter = ofAdapter
-                    oficinasViewModel.oficinas.observe(this) { lista ->
-                        listaOficinas = lista
-                        ofAdapter.updateData(lista)
-                    }
+                    oficinasViewModel.oficinasFiltradas.observe(this, Observer {
+                        ofAdapter.updateData(it)
+                    })
                     oficinasViewModel.cargarOficinas()
 
                     etBuscar.addTextChangedListener(object : TextWatcher {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                         override fun afterTextChanged(s: Editable?) {
-                            val query = s.toString().trim().lowercase()
-                            val filtrado = listaOficinas.filter {
-                                it.codigo.lowercase().contains(query)
-                            }
-                            ofAdapter.updateData(filtrado)
+                            oficinasViewModel.buscarPorCodigoFirestore(s.toString())
                         }
                     })
                 }
                 R.id.nav_departamentos -> {
                     val deptAdapter = DepartamentoAdapter(emptyList()) { d ->
-                        showToast("Seleccionado: ${d.nombre}")
+                        // Inflar el layout de detalles
+                        val detalleView = layoutInflater.inflate(R.layout.detalle_departamento, null)
+
+                        // Llenar los campos
+                        detalleView.findViewById<TextView>(R.id.tvDetalleCodigo).text = d.codigo
+                        detalleView.findViewById<TextView>(R.id.tvDetalleNombre).text = d.nombre
+
+                        // Mostrar en el contenedor de detalles
+                        contenedor.removeAllViews()
+                        contenedor.addView(detalleView)
                     }
+
                     rvListado.adapter = deptAdapter
-                    departamentosViewModel.departamentos.observe(this) { deptAdapter.updateData(it) }
-                    departamentosViewModel.loadDepartamentos()
+
+                    departamentosViewModel.departamentosFiltrados.observe(this) {
+                        deptAdapter.updateData(it)
+                    }
+
+                    departamentosViewModel.cargarDepartamentos()
+
+                    etBuscar.addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                        override fun afterTextChanged(s: Editable?) {
+                            departamentosViewModel.buscarPorCodigoFirestore(s.toString())
+                        }
+                    })
                 }
+
+
                 R.id.nav_usuario -> showUsuarioDialog()
             }
             true
