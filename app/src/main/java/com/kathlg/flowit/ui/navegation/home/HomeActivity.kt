@@ -3,6 +3,7 @@ package com.kathlg.flowit.ui.navegation.home
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -124,12 +125,32 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.nav_oficinas -> {
                     val ofAdapter = OficinaAdapter(emptyList()) { oficina ->
-                        showToast("Seleccionada: ${oficina.nombre}")
+                        // Inflar el layout de detalles
+                        val inflater = layoutInflater
+                        val detalleView = inflater.inflate(R.layout.detalle_oficina, null)
+
+                        // Llenar los campos
+                        detalleView.findViewById<TextView>(R.id.tvDetalleCodigo).text = oficina.codigo
+                        detalleView.findViewById<TextView>(R.id.tvDetalleDireccion).text = oficina.direccion
+                        detalleView.findViewById<TextView>(R.id.tvDetalleCiudad).text = oficina.ciudad
+                        detalleView.findViewById<TextView>(R.id.tvDetallePuestosTrabajo).text =
+                            "Puestos de trabajo: ${oficina.puestosTrabajo}"
+                        detalleView.findViewById<TextView>(R.id.tvDetallePuestosAlumnos).text =
+                            "Puestos de alumnos: ${oficina.puestosAlumnos}"
+                        detalleView.findViewById<TextView>(R.id.tvDetallePuestosTeletrabajo).text =
+                            "Puestos de teletrabajo: ${oficina.puestosTeletrabajo}"
+
+                        // Insertar en el FrameLayout
+                        val contenedor = findViewById<FrameLayout>(R.id.flDetalles)
+                        contenedor.removeAllViews()
+                        contenedor.addView(detalleView)
                     }
+
                     rvListado.adapter = ofAdapter
                     oficinasViewModel.oficinas.observe(this) { ofAdapter.updateData(it) }
                     oficinasViewModel.cargarOficinas()
                 }
+
                 R.id.nav_departamentos -> {
                     val deptAdapter = DepartamentoAdapter(emptyList()) { d ->
                         showToast("Seleccionado: ${d.nombre}")
