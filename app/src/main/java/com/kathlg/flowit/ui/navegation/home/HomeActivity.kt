@@ -41,15 +41,6 @@ class HomeActivity : AppCompatActivity() {
     private val tiposViewModel: TiposDispositivoViewModel by viewModels {
         TipoDispositivoViewModelFactory(TiposDispositivosRepository())
     }
-    private val empleadosViewModel: EmpleadosViewModel by viewModels {
-        EmpleadoViewModelFactory(EmpleadosRepository())
-    }
-    private val oficinasViewModel: OficinasViewModel by viewModels {
-        OficinaViewModelFactory(OficinasRepository())
-    }
-    private val departamentosViewModel: DepartamentosViewModel by viewModels {
-        DepartamentosViewModelFactory(DepartamentosRepository())
-    }
 
     val empleado = SessionManager.currentEmpleado
 
@@ -113,8 +104,8 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val initialItemId = when (depto) {
-            "laboral"  -> R.id.nav_empleados
-            "sistemas" -> R.id.nav_dispositivos
+            "dpt002"  -> R.id.nav_empleados
+            "dpt001" -> R.id.nav_dispositivos
             else       -> R.id.nav_dispositivos
         }
         navigationRail.selectedItemId = initialItemId
