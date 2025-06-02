@@ -7,8 +7,8 @@ import com.kathlg.flowit.R
 import com.kathlg.flowit.data.model.Dispositivo
 
 class DispositivoAdapter(
-    // Cambiamos a var para poder actualizarla
     private var items: List<Dispositivo>,
+    private var mapEmpleados: Map<String, String>, // <ID, Nombre>
     private val onItemClick: (Dispositivo) -> Unit
 ) : RecyclerView.Adapter<DispositivoViewHolder>() {
 
@@ -20,17 +20,16 @@ class DispositivoAdapter(
 
     override fun onBindViewHolder(holder: DispositivoViewHolder, position: Int) {
         val dispositivo = items[position]
-        holder.bind(dispositivo)
+        holder.bind(dispositivo, mapEmpleados)
         holder.itemView.setOnClickListener { onItemClick(dispositivo) }
     }
 
     override fun getItemCount(): Int = items.size
 
-    /**
-     * Reemplaza la lista de dispositivos y refresca el RecyclerView.
-     */
-    fun updateData(newList: List<Dispositivo>) {
+    fun updateData(newList: List<Dispositivo>, newMapEmpleados: Map<String, String>) {
         this.items = newList
+        this.mapEmpleados = newMapEmpleados
         notifyDataSetChanged()
     }
 }
+

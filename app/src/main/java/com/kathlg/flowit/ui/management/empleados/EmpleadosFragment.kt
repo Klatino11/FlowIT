@@ -89,6 +89,20 @@ class EmpleadosFragment : Fragment() {
             empAdapter?.updateData(it)
         }
 
+        val ivFiltrar = view.findViewById<ImageView>(R.id.ivFiltrar).setOnClickListener {
+            lifecycleScope.launch {
+                val listaDeptos = departamentosViewModel.departamentos.value ?: emptyList()
+                val listaOfis = oficinasViewModel.oficinasFiltradas.value ?: emptyList()
+                if (listaDeptos.isEmpty() || listaOfis.isEmpty()) {
+                    showToast("Cargando datos, intenta en un segundo")
+                    departamentosViewModel.cargarDepartamentos()
+                    oficinasViewModel.cargarOficinas()
+                    return@launch
+                }
+                mostrarDialogoFiltrarEmpleados(listaDeptos, listaOfis)
+            }
+        }
+
         val fabExportar = view.findViewById<FloatingActionButton>(R.id.fabExportarCSV)
         fabExportar.setOnClickListener {
             exportarEmpleadosCSV()
@@ -116,10 +130,125 @@ class EmpleadosFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                empleadosViewModel.buscarPorCodigo(s.toString())
+                empleadosViewModel.buscarPorNombre(s.toString())
             }
         })
     }
+
+    private fun mostrarDialogoFiltrarEmpleados(
+        listaDepartamentos: List<Departamento>,
+        listaOficinas: List<Oficina>
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_filtro_empleados, null)
+
+        val etFiltroCodigo = dialogView.findViewById<EditText>(R.id.etFiltroCodigo)
+        val spFiltroActivo = dialogView.findViewById<Spinner>(R.id.spFiltroActivo)
+        val spFiltroOficina = dialogView.findViewById<Spinner>(R.id.spFiltroOficina)
+        val spFiltroDepartamento = dialogView.findViewById<Spinner>(R.id.spFiltroDepartamento)
+        val etFiltroTeletrabajo = dialogView.findViewById<EditText>(R.id.etFiltroTeletrabajo)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelarFiltro)
+        val btnAplicar = dialogView.findViewById<Button>(R.id.btnAplicarFiltro)
+
+        // Opciones para el spinner "Activo"
+        val opcionesActivo = listOf("Todos", "Sí", "No")
+        spFiltroActivo.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, opcionesActivo)
+
+        // Opción "Todos" para Oficina
+        val opcionTodasOficinas = Oficina(
+            id = "",
+            codigo = "",
+            direccion = "",
+            ciudad = "Todas",
+            puestosTrabajo = 0,
+            puestosAlumnos = 0,
+            puestosTeletrabajo = 0
+        )
+        val listaSpinnerOficinas = listOf(opcionTodasOficinas) + listaOficinas
+        spFiltroOficina.adapter = object : ArrayAdapter<Oficina>(
+            requireContext(), android.R.layout.simple_spinner_dropdown_item, listaSpinnerOficinas
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.ciudad ?: ""
+                return view
+            }
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.ciudad ?: ""
+                return view
+            }
+        }
+
+        // Opción "Todos" para Departamento
+        val opcionTodosDepartamentos = Departamento(
+            id = "",
+            codigo = "",
+            nombre = "Todos"
+        )
+        val listaSpinnerDepartamentos = listOf(opcionTodosDepartamentos) + listaDepartamentos
+        spFiltroDepartamento.adapter = object : ArrayAdapter<Departamento>(
+            requireContext(), android.R.layout.simple_spinner_dropdown_item, listaSpinnerDepartamentos
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.nombre ?: ""
+                return view
+            }
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).text = getItem(position)?.nombre ?: ""
+                return view
+            }
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+        btnAplicar.setOnClickListener {
+            val codigo = etFiltroCodigo.text.toString().trim()
+            val activoSeleccion = spFiltroActivo.selectedItem?.toString()?.lowercase() ?: ""
+            val oficinaSeleccionada = spFiltroOficina.selectedItem as? Oficina
+            val departamentoSeleccionado = spFiltroDepartamento.selectedItem as? Departamento
+            val teletrabajo = etFiltroTeletrabajo.text.toString().trim()
+
+            // Chequeo: al menos un campo
+            if (
+                codigo.isEmpty() &&
+                activoSeleccion.isEmpty() &&
+                oficinaSeleccionada == null &&
+                departamentoSeleccionado == null &&
+                teletrabajo.isEmpty()
+            ) {
+                Toast.makeText(requireContext(), "Debes rellenar al menos un campo para filtrar.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val activo: Boolean? = when (activoSeleccion) {
+                "sí", "si", "sí ", "si " -> true
+                "no" -> false
+                else -> null
+            }
+
+            empleadosViewModel.filtrarEmpleadosAvanzado(
+                codigo = if (codigo.isNotEmpty()) codigo else null,
+                activo = activo,
+                oficinaId = oficinaSeleccionada?.id,
+                departamentoId = departamentoSeleccionado?.id,
+                puestosTeletrabajo = if (teletrabajo.isNotEmpty()) teletrabajo.toIntOrNull() else null,
+                oficinas = oficinasViewModel.oficinasFiltradas.value ?: emptyList()
+            )
+
+            dialog.dismiss()
+        }
+
+
+
+        dialog.show()
+    }
+
 
     /*** === EDITAR EMPLEADO === ***/
     private fun mostrarDialogoEditarEmpleado(
@@ -466,6 +595,7 @@ class EmpleadosFragment : Fragment() {
      * Diálogo de desactivación (puedes mover esto a un Helper si quieres reusar)
      */
     private fun mostrarDialogoDesactivarEmpleado(empleado: Empleado) {
+        // PRIMER DIALOG: Motivo de baja
         val dialogView = layoutInflater.inflate(R.layout.dialog_desactivar, null)
         val tvTitulo = dialogView.findViewById<TextView>(R.id.tvTituloDesactivar)
         val etMotivo = dialogView.findViewById<EditText>(R.id.etMotivoBaja)
@@ -474,26 +604,61 @@ class EmpleadosFragment : Fragment() {
 
         tvTitulo.text = "${empleado.nombre} (Desactivar)"
 
-        val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        val primerDialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setCancelable(true)
             .create()
 
-        btnCancelar.setOnClickListener {
-            alertDialog.dismiss()
-        }
+        btnCancelar.setOnClickListener { primerDialog.dismiss() }
 
         btnDesactivar.setOnClickListener {
             val motivo = etMotivo.text.toString().trim()
             if (motivo.isEmpty()) {
                 showToast("Por favor, introduce un motivo")
             } else {
-                alertDialog.dismiss()
-                desactivarEmpleado(empleado, motivo)
+                primerDialog.dismiss()
+                // SEGUNDO DIALOG: Confirmación
+                mostrarDialogoConfirmacionDesactivacion(empleado, motivo)
             }
         }
 
-        alertDialog.show()
+        primerDialog.show()
+    }
+
+    private fun mostrarDialogoConfirmacionDesactivacion(empleado: Empleado, motivo: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm, null)
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvConfirmMessage)
+        val etRegistro = dialogView.findViewById<TextView>(R.id.etRegistro)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<Button>(R.id.btnConfirmar)
+
+        // Mensaje principal
+        tvMensaje.text = "¿Seguro que deseas desactivar a este empleado?"
+
+        // Resumen de la acción (puedes personalizar los datos que muestras aquí)
+        etRegistro.text = """
+        Código: ${empleado.codigo}
+        Nombre: ${empleado.nombre}
+        Email: ${empleado.email}
+        Departamento: ${empleado.departamento}
+        Oficina: ${empleado.oficina}
+        Motivo: $motivo
+    """.trimIndent()
+        etRegistro.isEnabled = false // Solo lectura
+
+        val segundoDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { segundoDialog.dismiss() }
+        btnConfirmar.setOnClickListener {
+            segundoDialog.dismiss()
+            // Ya con el motivo, desactiva realmente
+            desactivarEmpleado(empleado, motivo)
+        }
+
+        segundoDialog.show()
     }
 
     private fun desactivarEmpleado(empleado: Empleado, motivo: String) {

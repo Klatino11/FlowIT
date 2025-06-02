@@ -16,6 +16,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kathlg.flowit.R
 import com.kathlg.flowit.data.model.Dispositivo
 import com.kathlg.flowit.data.repository.DispositivosRepository
+import com.kathlg.flowit.data.repository.EmpleadosRepository
+import com.kathlg.flowit.ui.management.empleados.EmpleadoViewModelFactory
+import com.kathlg.flowit.ui.management.empleados.EmpleadosViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -26,7 +29,12 @@ class DispositivosFragment : Fragment() {
     private val dispositivosViewModel: DispositivosViewModel by activityViewModels {
         DispositivosViewModelFactory(DispositivosRepository())
     }
+    private val empleadosViewModel: EmpleadosViewModel by activityViewModels {
+        EmpleadoViewModelFactory(EmpleadosRepository())
+    }
 
+    private var mapEmpleados: Map<String, String> = emptyMap()
+    private lateinit var dispAdapter: DispositivoAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,21 +48,26 @@ class DispositivosFragment : Fragment() {
         val etBuscar = view.findViewById<EditText>(R.id.etBuscar)
         val contenedor = view.findViewById<FrameLayout>(R.id.flDetalles)
 
-        val fabExportar = view.findViewById<FloatingActionButton>(R.id.fabExportarCSV)
-        fabExportar.setOnClickListener {
-            exportarDispositivosCSV()
-        }
-
-        rvListado.layoutManager = LinearLayoutManager(requireContext())
-        val dispAdapter = DispositivoAdapter(emptyList()) { dispositivo ->
+        // Inicializa el adapter vacío
+        dispAdapter = DispositivoAdapter(emptyList(), mapEmpleados) { dispositivo ->
             mostrarDetalleDispositivo(dispositivo, contenedor)
         }
+        rvListado.layoutManager = LinearLayoutManager(requireContext())
         rvListado.adapter = dispAdapter
 
-        // Observa los dispositivos y actualiza el adapter
-        dispositivosViewModel.devices.observe(viewLifecycleOwner) {
-            dispAdapter.updateData(it)
+        // Observa empleados y dispositivos, y actualiza el adapter en cada cambio
+        empleadosViewModel.empleadosFiltrados.observe(viewLifecycleOwner) { listaEmpleados ->
+            mapEmpleados = listaEmpleados.associate { it.codigo to it.nombre }
+            // Actualiza también la lista de dispositivos con el nuevo mapa
+            val dispositivos = dispositivosViewModel.devices.value ?: emptyList()
+            dispAdapter.updateData(dispositivos, mapEmpleados)
         }
+        dispositivosViewModel.devices.observe(viewLifecycleOwner) { dispositivos ->
+            dispAdapter.updateData(dispositivos, mapEmpleados)
+        }
+
+        // Carga datos
+        empleadosViewModel.cargarEmpleados()
         dispositivosViewModel.loadDevices()
 
         // Si tienes búsqueda, añade el filtro aquí (¡adáptalo a tu ViewModel si usas filtro por código!)
