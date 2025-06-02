@@ -65,7 +65,7 @@
             android:id="@+id/btnConfirmar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Desactivar"
+            android:text="Aceptar"
             android:textColor="@color/white"
             android:backgroundTint="@color/flowit_azul_oscuro"/>
     </LinearLayout>

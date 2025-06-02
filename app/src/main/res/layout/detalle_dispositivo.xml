@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutDetalleDispositivo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/fondo_detalle">
+
+    <LinearLayout
+        android:id="@+id/contenidoDispositivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ID del Dispositivo -->
+        <TextView
+            android:id="@+id/tvDetalleNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="10dp"
+            android:text="PRT0001"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/flowit_azul_oscuro" />
+
+        <!-- Tipo de Dispositivo -->
+        <TextView
+            android:id="@+id/tvDetalleTipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:text="Tipo: Portátil"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_azul_intermedio" />
+
+        <!-- RAM -->
+        <TextView
+            android:id="@+id/tvDetalleRam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="RAM: 16 GB"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Modelo -->
+        <TextView
+            android:id="@+id/tvDetalleModelo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Modelo: Victus"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Marca -->
+        <TextView
+            android:id="@+id/tvDetalleMarca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Marca: HP"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Número de serie -->
+        <TextView
+            android:id="@+id/tvDetalleNumSerie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Nº Serie: 876UHJKO98HI"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Precio -->
+        <TextView
+            android:id="@+id/tvDetallePrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Precio: 1.085,34 €"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Sistema Operativo (solo para portátiles/sobremesa) -->
+        <TextView
+            android:id="@+id/tvDetalleSO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="SO: Windows 11"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- Deep Freeze (solo para portátiles/sobremesa) -->
+        <TextView
+            android:id="@+id/tvDetalleDeepFreeze"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Deep Freeze: No"
+            android:textColor="@color/flowit_negro" />
+
+        <!-- TeamViewer (solo para móviles) -->
+        <TextView
+            android:id="@+id/tvDetalleTeamViewer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="TeamViewer: Sí"
+            android:textColor="@color/flowit_negro"
+            android:visibility="gone"/>
+
+        <!-- Número de teléfono (solo para móviles) -->
+        <TextView
+            android:id="@+id/tvDetalleNumTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Teléfono: 678255531"
+            android:textColor="@color/flowit_negro"
+            android:visibility="gone"/>
+
+        <!-- Empleado asignado -->
+        <TextView
+            android:id="@+id/tvDetalleEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:text="Empleado: EMPL0001"
+            android:textColor="@color/flowit_azul_intermedio" />
+    </LinearLayout>
+
+    <!-- Botón editar (opcional) -->
+    <ImageView
+        android:id="@+id/btnEditarDispositivo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="190dp"
+        android:contentDescription="Editar"
+        android:src="@drawable/ic_editar"
+        app:tint="@color/flowit_turquesa" />
+
+    <!-- Botón desactivar (opcional) -->
+    <ImageView
+        android:id="@+id/btnDesactivarDispositivo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:contentDescription="Desactivar"
+        android:src="@drawable/ic_desactivar"
+        app:tint="@color/flowit_turquesa" />
+</RelativeLayout>
