@@ -1,5 +1,6 @@
 package com.kathlg.flowit.ui.management.empleados
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,9 +12,14 @@ class EmpleadosViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvNumero: TextView = view.findViewById(R.id.tvNumEmpleado)
     private val tvDepto: TextView = view.findViewById(R.id.tvDepartamento)
 
-    fun bind(empleado: Empleado) {
+    fun bind(empleado: Empleado, deptoNombres: Map<String, String>) {
+        Log.d("EmpleadosViewHolder", "Empleado: ${empleado.nombre} - deptoID: ${empleado.departamento}, map: $deptoNombres")
         tvNombre.text = empleado.nombre
         tvNumero.text = "Código: ${empleado.codigo}"
-        tvDepto.text = "Departamento: ${empleado.departamento}"
+
+        val nombreDepto = deptoNombres[empleado.departamento] ?: empleado.departamento
+        tvDepto.text = "Departamento: $nombreDepto"
     }
+
+
 }

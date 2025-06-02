@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    implementation ("androidx.fragment:fragment-ktx:1.3.6") // O la última versión estable
     implementation ("com.google.android.material:material:1.9.0") // o superior
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore-ktx")

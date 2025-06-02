@@ -47,6 +47,16 @@ class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewMode
         }
     }
 
+    fun actualizarEmpleado(empleado: Empleado, campos: Map<String, Any>, callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val exito = repository.actualizarEmpleado(empleado, campos)
+            callback(exito)
+            if (exito) cargarEmpleados()
+        }
+    }
+
+
+
     fun buscarPorCodigo(query: String) {
         val empleadosActuales = _empleados.value ?: return
         val filtrados = empleadosActuales.filter {

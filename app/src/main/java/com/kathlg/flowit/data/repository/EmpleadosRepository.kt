@@ -109,6 +109,20 @@ class EmpleadosRepository {
         }
     }
 
+    suspend fun actualizarEmpleado(empleado: Empleado, campos: Map<String, Any>): Boolean = withContext(Dispatchers.IO) {
+        try {
+            FirebaseFirestore.getInstance()
+                .collection("Empleados")
+                .document(empleado.id)
+                .update(campos)
+                .await()
+            true
+        } catch (e: Exception) {
+            Log.e("EmpleadosRepository", "❌ Error al actualizar empleado ${empleado.id}", e)
+            false
+        }
+    }
+
 
     suspend fun desactivarEmpleado(id: String, motivo: String?): Boolean = withContext(Dispatchers.IO) {
         try {

@@ -1,5 +1,6 @@
 package com.kathlg.flowit.ui.management.empleados
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +9,7 @@ import com.kathlg.flowit.data.model.Empleado
 
 class EmpleadosAdapter(
     private var lista: List<Empleado>,
+    private var mapDeptoNombres: Map<String, String>,
     private val onItemClick: (Empleado) -> Unit
 ) : RecyclerView.Adapter<EmpleadosViewHolder>() {
 
@@ -19,8 +21,14 @@ class EmpleadosAdapter(
 
     override fun onBindViewHolder(holder: EmpleadosViewHolder, position: Int) {
         val item = lista[position]
-        holder.bind(item)
+        holder.bind(item, mapDeptoNombres) // Pasar el diccionario aquí
         holder.itemView.setOnClickListener { onItemClick(item) }
+    }
+
+    fun updateMapDepto(newMap: Map<String, String>) {
+        Log.d("EmpleadosAdapter", "Diccionario actualizado: $newMap")
+        mapDeptoNombres = newMap
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = lista.size
