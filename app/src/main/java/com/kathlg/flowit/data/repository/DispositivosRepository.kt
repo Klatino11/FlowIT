@@ -1,7 +1,6 @@
 package com.kathlg.flowit.data.repository
 
 import android.util.Log
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kathlg.flowit.data.model.Dispositivo
 import kotlinx.coroutines.Dispatchers

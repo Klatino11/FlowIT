@@ -22,8 +22,8 @@ class TiposDispositivosRepository {
             val snapshot = coleccion.get().await()
             // 3) Mapeo de cada documento a TipoDispositivo
             snapshot.documents.mapNotNull { doc ->
-                val nombre = doc.getString("nombre")
-                val prefijo = doc.getString("prefijo")
+                val nombre = doc.getString("Nombre")
+                val prefijo = doc.getString("Prefijo")
                 if (nombre != null && prefijo != null) {
                     TipoDispositivo(
                         id = doc.id,

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutNuevoDispositivo"
+    android:layout_width="800dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_detalle">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nuevo Dispositivo"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Tipo de dispositivo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Tipo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spTipoDispositivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- RAM -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="RAM (GB):"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etRamDispositivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: 8"
+            android:inputType="number"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Modelo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Modelo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etModeloDispositivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: ThinkPad"
+            android:inputType="text"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Marca -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Marca:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etMarcaDispositivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: HP"
+            android:inputType="text"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Número de serie -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Nº Serie/IMEI:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etNumSerie"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: 876UHJKO98HI"
+            android:inputType="text"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Precio -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Precio (€):"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etPrecioDispositivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: 1085.34"
+            android:inputType="numberDecimal"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- TeamViewer (solo móvil, controlar visibilidad desde el código) -->
+    <LinearLayout
+        android:id="@+id/layoutTeamViewer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="TeamViewer:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Switch
+            android:id="@+id/swTeamViewer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Instalado"/>
+    </LinearLayout>
+
+    <!-- SO (solo PC, controlar visibilidad desde el código) -->
+    <LinearLayout
+        android:id="@+id/layoutSO"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="SO:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etSO"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: Windows 11"
+            android:inputType="text"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Deep Freeze (solo PC, controlar visibilidad desde el código) -->
+    <LinearLayout
+        android:id="@+id/layoutDeepFreeze"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Deep Freeze:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Switch
+            android:id="@+id/swDeepFreeze"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Instalado"/>
+    </LinearLayout>
+
+    <!-- Número de teléfono (solo móvil, controlar visibilidad desde el código) -->
+    <LinearLayout
+        android:id="@+id/layoutNumTelefono"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Nº teléfono:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etNumTelefono"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Opcional"
+            android:inputType="phone"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Asignación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Asignación:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spAsignacion"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelarNuevo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnCrearNuevo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crear"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+    </LinearLayout>
+</LinearLayout>
