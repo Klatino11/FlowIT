@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Switch
@@ -25,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kathlg.flowit.R
 import com.kathlg.flowit.data.model.Dispositivo
+import com.kathlg.flowit.data.model.Empleado
 import com.kathlg.flowit.data.model.TipoDispositivo
 import com.kathlg.flowit.data.repository.DispositivosRepository
 import com.kathlg.flowit.data.repository.EmpleadosRepository
@@ -69,6 +71,10 @@ class DispositivosFragment : Fragment() {
         btnExportar.setOnClickListener {
             exportarDispositivosCSV()
         }
+        val btnFiltro = view.findViewById<ImageView>(R.id.ivFiltrar)
+        btnFiltro.setOnClickListener {
+            mostrarDialogoFiltroDispositivo()
+        }
 
         fabCrear.isEnabled = false // ¡Importante!
 
@@ -93,8 +99,9 @@ class DispositivosFragment : Fragment() {
             }
         }
 
-        dispositivosViewModel.devices.observe(viewLifecycleOwner) { dispositivos ->
-            dispAdapter.updateData(dispositivos, mapEmpleados)
+        dispositivosViewModel.devices.observe(viewLifecycleOwner) { dispositivos ->// Solo muestra los activos al iniciar
+            val activos = dispositivos.filter { it.activo }
+            dispAdapter.updateData(activos, mapEmpleados)
         }
 
         // Carga los tipos UNA VEZ y habilita el botón solo cuando termines
@@ -134,6 +141,64 @@ class DispositivosFragment : Fragment() {
             }
         })
     }
+
+    private fun mostrarDialogoFiltroDispositivo() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_filtro_dispositivo, null)
+        val spTipo = dialogView.findViewById<Spinner>(R.id.spFiltroTipo)
+        val etRam = dialogView.findViewById<EditText>(R.id.etFiltroRAM)
+        val etModelo = dialogView.findViewById<EditText>(R.id.etFiltroModelo)
+        val etSO = dialogView.findViewById<EditText>(R.id.etFiltroSO)
+        val spActivo = dialogView.findViewById<Spinner>(R.id.spFiltroActivo)
+
+        // Rellenar spinners
+        val adapterTipo = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, listOf("Cualquiera") + tiposList.map { it.nombre })
+        spTipo.adapter = adapterTipo
+
+        val adapterActivo = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, listOf("Cualquiera", "Sí", "No"))
+        spActivo.adapter = adapterActivo
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnCancelarFiltro).setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<Button>(R.id.btnAplicarFiltro).setOnClickListener {
+            // Recoger valores
+            val tipoSeleccionado = spTipo.selectedItemPosition
+            val tipoFiltro = if (tipoSeleccionado > 0) tiposList[tipoSeleccionado - 1].id else null
+            val ramFiltro = etRam.text.toString().toIntOrNull()
+            val modeloFiltro = etModelo.text.toString().trim().lowercase()
+            val soFiltro = etSO.text.toString().trim().lowercase()
+            val activoFiltro = when (spActivo.selectedItemPosition) {
+                1 -> true
+                2 -> false
+                else -> null
+            }
+            aplicarFiltroDispositivos(tipoFiltro, ramFiltro, modeloFiltro, soFiltro, activoFiltro)
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun aplicarFiltroDispositivos(
+        tipoId: String?,
+        ram: Int?,
+        modelo: String?,
+        so: String?,
+        activo: Boolean?
+    ) {
+        val originales = dispositivosViewModel.devices.value ?: emptyList()
+        val filtrados = originales.filter { d ->
+            (tipoId == null || d.tipo == tipoId) &&
+                    (ram == null || d.ramGb == ram) &&
+                    (modelo.isNullOrBlank() || d.modelo.lowercase().contains(modelo)) &&
+                    (so.isNullOrBlank() || (d.sistemaOperativo ?: "").lowercase().contains(so)) &&
+                    (activo == null || d.activo == activo)
+        }
+        dispAdapter.updateData(filtrados, mapEmpleados)
+    }
+
 
 
     private fun mostrarDialogoNuevoDispositivo() {
@@ -388,10 +453,94 @@ class DispositivosFragment : Fragment() {
             }
         }
 
+        detalleView.findViewById<ImageView>(R.id.btnDesactivarDispositivo).setOnClickListener {
+            mostrarDialogoDesactivarDispositivo(dispositivo)
+        }
         contenedor.removeAllViews()
         contenedor.addView(detalleView)
     }
 
+    private fun mostrarDialogoDesactivarDispositivo(dispositivo: Dispositivo) {
+        // PRIMER DIALOG: Motivo de baja
+        val dialogView = layoutInflater.inflate(R.layout.dialog_desactivar, null)
+        val tvTitulo = dialogView.findViewById<TextView>(R.id.tvTituloDesactivar)
+        val etMotivo = dialogView.findViewById<EditText>(R.id.etMotivoBaja)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelarDesactivar)
+        val btnDesactivar = dialogView.findViewById<Button>(R.id.btnConfirmarDesactivar)
+
+        tvTitulo.text = "${dispositivo.nombre} (Desactivar)"
+
+        val primerDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { primerDialog.dismiss() }
+
+        btnDesactivar.setOnClickListener {
+            val motivo = etMotivo.text.toString().trim()
+            if (motivo.isEmpty()) {
+                showToast("Por favor, introduce un motivo")
+            } else {
+                primerDialog.dismiss()
+                // SEGUNDO DIALOG: Confirmación
+                mostrarDialogoConfirmacionDesactivacion(dispositivo, motivo)
+            }
+        }
+
+        primerDialog.show()
+    }
+
+    private fun mostrarDialogoConfirmacionDesactivacion(dispositivo: Dispositivo, motivo: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm, null)
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvConfirmMessage)
+        val etRegistro = dialogView.findViewById<TextView>(R.id.etRegistro)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<Button>(R.id.btnConfirmar)
+
+        // Mensaje principal
+        tvMensaje.text = "¿Seguro que deseas desactivar a este empleado?"
+
+        // Resumen de la acción (puedes personalizar los datos que muestras aquí)
+        etRegistro.text = """
+            Código: ${dispositivo.nombre}
+            Tipo: ${mapTipos[dispositivo.tipo] ?: dispositivo.tipo}
+            RAM: ${dispositivo.ramGb} GB
+            Modelo: ${dispositivo.modelo}
+            Marca: ${dispositivo.marca}
+            Nº Serie: ${dispositivo.numeroSerie}
+            Empleado asignado: ${mapEmpleados[dispositivo.codigoEmpleado] ?: "Sin asignar"}
+            Estado: ${if (dispositivo.activo) "Activo" else "No activo"}
+            Motivo: $motivo
+        """.trimIndent()
+
+        etRegistro.isEnabled = false // Solo lectura
+
+        val segundoDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { segundoDialog.dismiss() }
+        btnConfirmar.setOnClickListener {
+            segundoDialog.dismiss()
+            // Ya con el motivo, desactiva realmente
+            desactivarDispositivo(dispositivo, motivo)
+        }
+
+        segundoDialog.show()
+    }
+    private fun desactivarDispositivo(dispositivo: Dispositivo, motivo: String) {
+        lifecycleScope.launch {
+            val exito = dispositivosViewModel.desactivarDispositivo(dispositivo.nombre, motivo)
+            if (exito) {
+                showToast("Dispositivo desactivado")
+                empleadosViewModel.cargarEmpleados()
+            } else {
+                showToast("Error al desactivar")
+            }
+        }
+    }
 
     private fun showToast(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()

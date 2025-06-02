@@ -67,4 +67,24 @@ class DispositivosRepository {
             emptyList()
         }
     }
+
+    suspend fun desactivarDispositivo(id: String, motivo: String?): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val updates = mutableMapOf<String, Any>("Activo" to false)
+            motivo?.takeIf { it.isNotBlank() }?.let {
+                updates["MotivoBaja"] = it
+            }
+
+            FirebaseFirestore.getInstance()
+                .collection("Dispositivos")
+                .document(id)
+                .update(updates)
+                .await()
+
+            true
+        } catch (e: Exception) {
+            Log.e("DispositivosRepository", "❌ Error al desactivar dispositivo $id", e)
+            false
+        }
+    }
 }

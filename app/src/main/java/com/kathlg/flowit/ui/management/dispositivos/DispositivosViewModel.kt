@@ -26,4 +26,12 @@ class DispositivosViewModel(
             _devices.value = lista
         }
     }
+
+    suspend fun desactivarDispositivo(idDispositivo: String, motivo: String): Boolean {
+        return try {
+            repository.desactivarDispositivo(idDispositivo, motivo)
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

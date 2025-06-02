@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="800dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_detalle">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filtrar Dispositivos"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Tipo de dispositivo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Tipo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spFiltroTipo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- RAM -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="RAM:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroRAM"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: 8"
+            android:inputType="number"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Modelo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Modelo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroModelo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: Latitude"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- SO (solo PC, pero lo mostramos siempre) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="SO:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroSO"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: Windows"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Activo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Activo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spFiltroActivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnAplicarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aplicar"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+    </LinearLayout>
+</LinearLayout>
