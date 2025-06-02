@@ -41,15 +41,6 @@
                     android:textColorHint="@color/flowit_azul_intermedio" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <ImageView
-                android:id="@+id/ivFiltrar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:contentDescription="Filtrar"
-                android:src="@drawable/ic_filtro"
-                app:tint="@color/flowit_turquesa" />
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kathlg.flowit.R
 import com.kathlg.flowit.data.model.Dispositivo
@@ -468,10 +469,8 @@ class DispositivosFragment : Fragment() {
 
     private fun mostrarDialogoEditarDispositivo(dispositivo: Dispositivo) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_editar_dispositivo, null)
-
         val etRAM = dialogView.findViewById<EditText>(R.id.etEditarRAM)
         val spAsignacion = dialogView.findViewById<Spinner>(R.id.spEditarAsignacion)
-        val spOficina = dialogView.findViewById<Spinner>(R.id.spEditarOficina)
         val layoutTeamViewer = dialogView.findViewById<LinearLayout>(R.id.layoutEditarTeamViewer)
         val swTeamViewer = dialogView.findViewById<Switch>(R.id.swEditarTeamViewer)
         val layoutSO = dialogView.findViewById<LinearLayout>(R.id.layoutEditarSO)
@@ -488,24 +487,20 @@ class DispositivosFragment : Fragment() {
         swDeepFreeze.isChecked = dispositivo.deepFreezeInstalado
         etNumTelefono.setText(dispositivo.numeroTelefono ?: "")
 
-        // Mostrar/ocultar campos según tipo
         val tipoNombre = mapTipos[dispositivo.tipo]?.lowercase() ?: ""
         layoutTeamViewer.visibility = if (tipoNombre.contains("móvil") || tipoNombre.contains("movil")) View.VISIBLE else View.GONE
         layoutNumTelefono.visibility = if (tipoNombre.contains("móvil") || tipoNombre.contains("movil")) View.VISIBLE else View.GONE
         layoutSO.visibility = if (tipoNombre.contains("portátil") || tipoNombre.contains("portatil") || tipoNombre.contains("sobremesa")) View.VISIBLE else View.GONE
         layoutDeepFreeze.visibility = if (tipoNombre.contains("portátil") || tipoNombre.contains("portatil") || tipoNombre.contains("sobremesa")) View.VISIBLE else View.GONE
 
-        // Adaptadores para asignación y oficina (rellena con tus datos)
-        // ...
-        // Ejemplo para asignación
+        var empleadosList: List<Empleado> = emptyList() // <-- Declara fuera
+
         lifecycleScope.launch {
             val empleadosRepo = EmpleadosRepository()
-            val empleadosList = empleadosRepo.obtenerEmpleados().filter { it.activo }
+            empleadosList = empleadosRepo.obtenerEmpleados().filter { it.activo }
 
-            // Adaptador para asignación
             val empleadosConVacio = listOf("Sin asignar") + empleadosList.map { "${it.codigo} - ${it.nombre}" }
             spAsignacion.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, empleadosConVacio)
-            // Selecciona asignación actual
             val idxAsignacion = empleadosList.indexOfFirst { it.codigo == dispositivo.codigoEmpleado }
             spAsignacion.setSelection(if (idxAsignacion != -1) idxAsignacion + 1 else 0)
         }
@@ -517,24 +512,20 @@ class DispositivosFragment : Fragment() {
 
         dialogView.findViewById<Button>(R.id.btnCancelarEdicionDispositivo).setOnClickListener { dialog.dismiss() }
         dialogView.findViewById<Button>(R.id.btnGuardarEdicionDispositivo).setOnClickListener {
-            // Obtener nuevos valores
             val nuevaRam = etRAM.text.toString().toIntOrNull()
             val nuevaAsignacionIdx = spAsignacion.selectedItemPosition
-            val nuevaOficinaIdx = spOficina.selectedItemPosition
             val nuevoTeamViewer = swTeamViewer.isChecked
             val nuevoSO = etSO.text.toString().trim()
             val nuevoDeepFreeze = swDeepFreeze.isChecked
             val nuevoNumTelefono = etNumTelefono.text.toString().trim()
 
-            // Comparar cambios
             val hayCambios =
                 nuevaRam != dispositivo.ramGb ||
-                        // compara asignación y oficina con los indices seleccionados
-                        // compara TeamViewer, SO, DeepFreeze, teléfono...
                         (layoutTeamViewer.visibility == View.VISIBLE && nuevoTeamViewer != dispositivo.teamviewerInstalado) ||
                         (layoutSO.visibility == View.VISIBLE && nuevoSO != (dispositivo.sistemaOperativo ?: "")) ||
                         (layoutDeepFreeze.visibility == View.VISIBLE && nuevoDeepFreeze != dispositivo.deepFreezeInstalado) ||
-                        (layoutNumTelefono.visibility == View.VISIBLE && nuevoNumTelefono != (dispositivo.numeroTelefono ?: ""))
+                        (layoutNumTelefono.visibility == View.VISIBLE && nuevoNumTelefono != (dispositivo.numeroTelefono ?: "")) ||
+                        (nuevaAsignacionIdx != (empleadosList.indexOfFirst { it.codigo == dispositivo.codigoEmpleado } + 1)) // Detectar cambio en asignación
 
             if (!hayCambios) {
                 showToast("No hay cambios para guardar.")
@@ -544,22 +535,30 @@ class DispositivosFragment : Fragment() {
             dialog.dismiss()
             mostrarDialogoConfirmarEdicion(
                 dispositivo,
-                nuevaRam, nuevaAsignacionIdx, nuevaOficinaIdx, nuevoTeamViewer, nuevoSO, nuevoDeepFreeze, nuevoNumTelefono
+                nuevaRam,
+                nuevaAsignacionIdx,
+                empleadosList,
+                nuevoTeamViewer,
+                nuevoSO,
+                nuevoDeepFreeze,
+                nuevoNumTelefono
             )
         }
         dialog.show()
     }
 
+
     private fun mostrarDialogoConfirmarEdicion(
         dispositivo: Dispositivo,
         nuevaRam: Int?,
         nuevaAsignacionIdx: Int,
-        nuevaOficinaIdx: Int,
+        empleadosList: List<Empleado>,
         nuevoTeamViewer: Boolean,
         nuevoSO: String,
         nuevoDeepFreeze: Boolean,
         nuevoNumTelefono: String
-    ) {
+    )
+    {
         val dialogView = layoutInflater.inflate(R.layout.dialog_confirm, null)
         val tvMensaje = dialogView.findViewById<TextView>(R.id.tvConfirmMessage)
         val etRegistro = dialogView.findViewById<TextView>(R.id.etRegistro)
@@ -589,8 +588,15 @@ class DispositivosFragment : Fragment() {
             // Guardar cambios
             guardarCambiosDispositivo(
                 dispositivo,
-                nuevaRam, nuevaAsignacionIdx, nuevaOficinaIdx, nuevoTeamViewer, nuevoSO, nuevoDeepFreeze, nuevoNumTelefono
+                nuevaRam,
+                nuevaAsignacionIdx,
+                empleadosList, // pásala aquí también
+                nuevoTeamViewer,
+                nuevoSO,
+                nuevoDeepFreeze,
+                nuevoNumTelefono
             )
+
         }
         dialog.show()
     }
@@ -599,17 +605,25 @@ class DispositivosFragment : Fragment() {
         dispositivo: Dispositivo,
         nuevaRam: Int?,
         nuevaAsignacionIdx: Int,
-        nuevaOficinaIdx: Int,
+        empleadosList: List<Empleado>,
         nuevoTeamViewer: Boolean,
         nuevoSO: String,
         nuevoDeepFreeze: Boolean,
         nuevoNumTelefono: String
     ) {
-        // Aquí construyes el mapa de cambios, solo con lo que cambió (o con todo, como prefieras)
         val cambios = mutableMapOf<String, Any>()
         nuevaRam?.let { cambios["RAM"] = it }
-        // Asignación y oficina: obtén el ID seleccionado de los adapters, igual que arriba
-        // ...
+
+        // Asignación (referencia a empleado)
+        if (nuevaAsignacionIdx > 0) {
+            val empleadoAsignado = empleadosList[nuevaAsignacionIdx - 1]
+            cambios["Asignacion"] = FirebaseFirestore.getInstance()
+                .collection("Empleados")
+                .document(empleadoAsignado.id)
+        } else {
+            cambios["Asignacion"] = FieldValue.delete() // Si quieres quitar la asignación
+        }
+
         if (nuevoSO.isNotBlank()) cambios["SO"] = nuevoSO
         cambios["TeamViewer"] = nuevoTeamViewer
         cambios["Deep Freeze"] = nuevoDeepFreeze
@@ -628,6 +642,7 @@ class DispositivosFragment : Fragment() {
             }
         }
     }
+
 
 
 

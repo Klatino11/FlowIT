@@ -49,7 +49,7 @@ class EmpleadosFragment : Fragment() {
     private val departamentosViewModel: DepartamentosViewModel by activityViewModels {
         DepartamentosViewModelFactory(DepartamentosRepository())
     }
-
+    private val isSistemas = SessionManager.currentEmpleado?.departamento?.equals("dpt001", ignoreCase = true) == true
     private val oficinasViewModel: OficinasViewModel by activityViewModels {
         OficinaViewModelFactory(OficinasRepository())
     }
@@ -63,6 +63,8 @@ class EmpleadosFragment : Fragment() {
     ): View = inflater.inflate(R.layout.fragment_empleados, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        departamentosViewModel.cargarDepartamentos()   // <--- AÑADE ESTO
+        oficinasViewModel.cargarOficinas()             // <--- AÑADE ESTO
         val rvListado = view.findViewById<RecyclerView>(R.id.rvListado).apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
@@ -109,6 +111,7 @@ class EmpleadosFragment : Fragment() {
         }
 
         val fabCrear = view.findViewById<FloatingActionButton>(R.id.fabCrearRegistro)
+        fabCrear.visibility = if (isSistemas) View.GONE else View.VISIBLE
         fabCrear.setOnClickListener {
             // Carga los datos necesarios antes de mostrar el diálogo
             lifecycleScope.launch {
@@ -387,6 +390,9 @@ class EmpleadosFragment : Fragment() {
         val detalleView = layoutInflater.inflate(R.layout.detalle_empleado, null)
         detalleView.findViewById<TextView>(R.id.tvDetalleNombre).text = empleado.nombre
         detalleView.findViewById<TextView>(R.id.tvDetalleEmail).text = empleado.email
+        if (isSistemas) {
+            detalleView.findViewById<TextView>(R.id.tvDetalleDocumento).visibility = View.GONE
+        }
         detalleView.findViewById<TextView>(R.id.tvDetalleDocumento).text =
             "${empleado.tipoDocumento}: ${empleado.numDocumento}"
 

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="800dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_detalle">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filtrar Oficinas"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Dirección -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Dirección:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroDireccion"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: Calle Mayor"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Ciudad -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Ciudad:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroCiudad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: Madrid"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnAplicarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aplicar"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+    </LinearLayout>
+</LinearLayout>

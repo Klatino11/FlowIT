@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -69,7 +71,46 @@ class OficinasFragment : Fragment() {
                 oficinasViewModel.buscarPorCodigoFirestore(s.toString())
             }
         })
+
+        val ivFiltrar = view.findViewById<ImageView>(R.id.ivFiltrar)
+        ivFiltrar.setOnClickListener {
+            mostrarDialogoFiltroOficina()
+        }
+
     }
+
+    private fun mostrarDialogoFiltroOficina() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_filtro_oficina, null)
+        val etDireccion = dialogView.findViewById<EditText>(R.id.etFiltroDireccion)
+        val etCiudad = dialogView.findViewById<EditText>(R.id.etFiltroCiudad)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelarFiltro)
+        val btnAplicar = dialogView.findViewById<Button>(R.id.btnAplicarFiltro)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+        btnAplicar.setOnClickListener {
+            val direccion = etDireccion.text.toString().trim().lowercase()
+            val ciudad = etCiudad.text.toString().trim().lowercase()
+            filtrarOficinas(direccion, ciudad)
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun filtrarOficinas(direccion: String, ciudad: String) {
+        val originales = oficinasViewModel.oficinasFiltradas.value ?: emptyList()
+        val filtradas = originales.filter { oficina ->
+            (direccion.isBlank() || oficina.direccion.lowercase().contains(direccion)) &&
+                    (ciudad.isBlank() || oficina.ciudad.lowercase().contains(ciudad))
+        }
+        // Actualiza el adapter directamente (no el viewmodel, para no perder los datos originales)
+        (view?.findViewById<RecyclerView>(R.id.rvListado)?.adapter as? OficinaAdapter)?.updateData(filtradas)
+    }
+
 
     private fun exportarOficinasCSV() {
         val builder = StringBuilder()
