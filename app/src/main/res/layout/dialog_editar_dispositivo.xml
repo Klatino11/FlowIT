@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_detalle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTituloEditarDispositivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editar dispositivo"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- RAM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="RAM (GB):"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <EditText
+                android:id="@+id/etEditarRAM"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:textColor="@color/flowit_negro"
+                android:textColorHint="@color/HintTexts"
+                android:hint="RAM"/>
+        </LinearLayout>
+
+        <!-- Asignación (Empleado) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Asignación:"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <Spinner
+                android:id="@+id/spEditarAsignacion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- TeamViewer (Solo móvil) -->
+        <LinearLayout
+            android:id="@+id/layoutEditarTeamViewer"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="TeamViewer:"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <Switch
+                android:id="@+id/swEditarTeamViewer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- SO (Solo PC) -->
+        <LinearLayout
+            android:id="@+id/layoutEditarSO"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="SO:"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <EditText
+                android:id="@+id/etEditarSO"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Sistema Operativo"
+                android:textColor="@color/flowit_negro"
+                android:textColorHint="@color/HintTexts"/>
+        </LinearLayout>
+
+        <!-- Deep Freeze (Solo PC) -->
+        <LinearLayout
+            android:id="@+id/layoutEditarDeepFreeze"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Deep Freeze:"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <Switch
+                android:id="@+id/swEditarDeepFreeze"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- Número de Teléfono (Solo móvil) -->
+        <LinearLayout
+            android:id="@+id/layoutEditarNumTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Núm. Teléfono:"
+                android:textColor="@color/flowit_azul_oscuro"/>
+            <EditText
+                android:id="@+id/etEditarNumTelefono"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Número de Teléfono"
+                android:inputType="phone"
+                android:textColor="@color/flowit_negro"
+                android:textColorHint="@color/HintTexts"/>
+        </LinearLayout>
+
+        <!-- Botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnCancelarEdicionDispositivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:textColor="@color/flowit_azul_oscuro"
+                android:backgroundTint="@color/flowit_turquesa"
+                android:layout_marginEnd="8dp"/>
+            <Button
+                android:id="@+id/btnGuardarEdicionDispositivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/flowit_azul_oscuro"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

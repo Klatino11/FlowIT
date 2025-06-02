@@ -30,6 +30,7 @@ import com.kathlg.flowit.data.model.Empleado
 import com.kathlg.flowit.data.model.TipoDispositivo
 import com.kathlg.flowit.data.repository.DispositivosRepository
 import com.kathlg.flowit.data.repository.EmpleadosRepository
+import com.kathlg.flowit.data.repository.OficinasRepository
 import com.kathlg.flowit.data.repository.TiposDispositivosRepository
 import com.kathlg.flowit.ui.management.empleados.EmpleadoViewModelFactory
 import com.kathlg.flowit.ui.management.empleados.EmpleadosViewModel
@@ -456,9 +457,179 @@ class DispositivosFragment : Fragment() {
         detalleView.findViewById<ImageView>(R.id.btnDesactivarDispositivo).setOnClickListener {
             mostrarDialogoDesactivarDispositivo(dispositivo)
         }
+
+        detalleView.findViewById<ImageView>(R.id.btnEditarDispositivo).setOnClickListener {
+            mostrarDialogoEditarDispositivo(dispositivo)
+        }
+
         contenedor.removeAllViews()
         contenedor.addView(detalleView)
     }
+
+    private fun mostrarDialogoEditarDispositivo(dispositivo: Dispositivo) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_dispositivo, null)
+
+        val etRAM = dialogView.findViewById<EditText>(R.id.etEditarRAM)
+        val spAsignacion = dialogView.findViewById<Spinner>(R.id.spEditarAsignacion)
+        val spOficina = dialogView.findViewById<Spinner>(R.id.spEditarOficina)
+        val layoutTeamViewer = dialogView.findViewById<LinearLayout>(R.id.layoutEditarTeamViewer)
+        val swTeamViewer = dialogView.findViewById<Switch>(R.id.swEditarTeamViewer)
+        val layoutSO = dialogView.findViewById<LinearLayout>(R.id.layoutEditarSO)
+        val etSO = dialogView.findViewById<EditText>(R.id.etEditarSO)
+        val layoutDeepFreeze = dialogView.findViewById<LinearLayout>(R.id.layoutEditarDeepFreeze)
+        val swDeepFreeze = dialogView.findViewById<Switch>(R.id.swEditarDeepFreeze)
+        val layoutNumTelefono = dialogView.findViewById<LinearLayout>(R.id.layoutEditarNumTelefono)
+        val etNumTelefono = dialogView.findViewById<EditText>(R.id.etEditarNumTelefono)
+
+        // Setear valores actuales
+        etRAM.setText(dispositivo.ramGb.toString())
+        swTeamViewer.isChecked = dispositivo.teamviewerInstalado
+        etSO.setText(dispositivo.sistemaOperativo ?: "")
+        swDeepFreeze.isChecked = dispositivo.deepFreezeInstalado
+        etNumTelefono.setText(dispositivo.numeroTelefono ?: "")
+
+        // Mostrar/ocultar campos según tipo
+        val tipoNombre = mapTipos[dispositivo.tipo]?.lowercase() ?: ""
+        layoutTeamViewer.visibility = if (tipoNombre.contains("móvil") || tipoNombre.contains("movil")) View.VISIBLE else View.GONE
+        layoutNumTelefono.visibility = if (tipoNombre.contains("móvil") || tipoNombre.contains("movil")) View.VISIBLE else View.GONE
+        layoutSO.visibility = if (tipoNombre.contains("portátil") || tipoNombre.contains("portatil") || tipoNombre.contains("sobremesa")) View.VISIBLE else View.GONE
+        layoutDeepFreeze.visibility = if (tipoNombre.contains("portátil") || tipoNombre.contains("portatil") || tipoNombre.contains("sobremesa")) View.VISIBLE else View.GONE
+
+        // Adaptadores para asignación y oficina (rellena con tus datos)
+        // ...
+        // Ejemplo para asignación
+        lifecycleScope.launch {
+            val empleadosRepo = EmpleadosRepository()
+            val empleadosList = empleadosRepo.obtenerEmpleados().filter { it.activo }
+
+            // Adaptador para asignación
+            val empleadosConVacio = listOf("Sin asignar") + empleadosList.map { "${it.codigo} - ${it.nombre}" }
+            spAsignacion.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, empleadosConVacio)
+            // Selecciona asignación actual
+            val idxAsignacion = empleadosList.indexOfFirst { it.codigo == dispositivo.codigoEmpleado }
+            spAsignacion.setSelection(if (idxAsignacion != -1) idxAsignacion + 1 else 0)
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnCancelarEdicionDispositivo).setOnClickListener { dialog.dismiss() }
+        dialogView.findViewById<Button>(R.id.btnGuardarEdicionDispositivo).setOnClickListener {
+            // Obtener nuevos valores
+            val nuevaRam = etRAM.text.toString().toIntOrNull()
+            val nuevaAsignacionIdx = spAsignacion.selectedItemPosition
+            val nuevaOficinaIdx = spOficina.selectedItemPosition
+            val nuevoTeamViewer = swTeamViewer.isChecked
+            val nuevoSO = etSO.text.toString().trim()
+            val nuevoDeepFreeze = swDeepFreeze.isChecked
+            val nuevoNumTelefono = etNumTelefono.text.toString().trim()
+
+            // Comparar cambios
+            val hayCambios =
+                nuevaRam != dispositivo.ramGb ||
+                        // compara asignación y oficina con los indices seleccionados
+                        // compara TeamViewer, SO, DeepFreeze, teléfono...
+                        (layoutTeamViewer.visibility == View.VISIBLE && nuevoTeamViewer != dispositivo.teamviewerInstalado) ||
+                        (layoutSO.visibility == View.VISIBLE && nuevoSO != (dispositivo.sistemaOperativo ?: "")) ||
+                        (layoutDeepFreeze.visibility == View.VISIBLE && nuevoDeepFreeze != dispositivo.deepFreezeInstalado) ||
+                        (layoutNumTelefono.visibility == View.VISIBLE && nuevoNumTelefono != (dispositivo.numeroTelefono ?: ""))
+
+            if (!hayCambios) {
+                showToast("No hay cambios para guardar.")
+                return@setOnClickListener
+            }
+
+            dialog.dismiss()
+            mostrarDialogoConfirmarEdicion(
+                dispositivo,
+                nuevaRam, nuevaAsignacionIdx, nuevaOficinaIdx, nuevoTeamViewer, nuevoSO, nuevoDeepFreeze, nuevoNumTelefono
+            )
+        }
+        dialog.show()
+    }
+
+    private fun mostrarDialogoConfirmarEdicion(
+        dispositivo: Dispositivo,
+        nuevaRam: Int?,
+        nuevaAsignacionIdx: Int,
+        nuevaOficinaIdx: Int,
+        nuevoTeamViewer: Boolean,
+        nuevoSO: String,
+        nuevoDeepFreeze: Boolean,
+        nuevoNumTelefono: String
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm, null)
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvConfirmMessage)
+        val etRegistro = dialogView.findViewById<TextView>(R.id.etRegistro)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnConfirmar = dialogView.findViewById<Button>(R.id.btnConfirmar)
+
+        // Muestra un resumen de cambios (adáptalo a lo que muestres)
+        etRegistro.text = """
+        Código: ${dispositivo.nombre}
+        RAM: ${nuevaRam ?: dispositivo.ramGb} GB
+        Asignación: ...
+        Oficina: ...
+        TeamViewer: $nuevoTeamViewer
+        SO: $nuevoSO
+        Deep Freeze: $nuevoDeepFreeze
+        Número Teléfono: $nuevoNumTelefono
+    """.trimIndent()
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+        btnConfirmar.setOnClickListener {
+            dialog.dismiss()
+            // Guardar cambios
+            guardarCambiosDispositivo(
+                dispositivo,
+                nuevaRam, nuevaAsignacionIdx, nuevaOficinaIdx, nuevoTeamViewer, nuevoSO, nuevoDeepFreeze, nuevoNumTelefono
+            )
+        }
+        dialog.show()
+    }
+
+    private fun guardarCambiosDispositivo(
+        dispositivo: Dispositivo,
+        nuevaRam: Int?,
+        nuevaAsignacionIdx: Int,
+        nuevaOficinaIdx: Int,
+        nuevoTeamViewer: Boolean,
+        nuevoSO: String,
+        nuevoDeepFreeze: Boolean,
+        nuevoNumTelefono: String
+    ) {
+        // Aquí construyes el mapa de cambios, solo con lo que cambió (o con todo, como prefieras)
+        val cambios = mutableMapOf<String, Any>()
+        nuevaRam?.let { cambios["RAM"] = it }
+        // Asignación y oficina: obtén el ID seleccionado de los adapters, igual que arriba
+        // ...
+        if (nuevoSO.isNotBlank()) cambios["SO"] = nuevoSO
+        cambios["TeamViewer"] = nuevoTeamViewer
+        cambios["Deep Freeze"] = nuevoDeepFreeze
+        cambios["NumTelefono"] = nuevoNumTelefono
+
+        lifecycleScope.launch {
+            try {
+                FirebaseFirestore.getInstance().collection("Dispositivos")
+                    .document(dispositivo.nombre)
+                    .update(cambios)
+                    .await()
+                showToast("Dispositivo actualizado")
+                dispositivosViewModel.loadDevices()
+            } catch (e: Exception) {
+                showToast("Error al guardar: ${e.message}")
+            }
+        }
+    }
+
+
 
     private fun mostrarDialogoDesactivarDispositivo(dispositivo: Dispositivo) {
         // PRIMER DIALOG: Motivo de baja
