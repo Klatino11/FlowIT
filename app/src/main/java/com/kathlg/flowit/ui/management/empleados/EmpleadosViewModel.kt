@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewModel() {
 
     private val _empleados = MutableLiveData<List<Empleado>>()
-    val empleados: LiveData<List<Empleado>> = _empleados
 
     private val _empleadosFiltrados = MutableLiveData<List<Empleado>>()
     val empleadosFiltrados: LiveData<List<Empleado>> = _empleadosFiltrados
@@ -19,10 +18,36 @@ class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewMode
     fun cargarEmpleados() {
         viewModelScope.launch {
             val resultado = repository.obtenerEmpleados()
-            _empleados.value = resultado
-            _empleadosFiltrados.value = resultado
+            _empleados.value = resultado // Guarda todos los empleados para futuros filtros
+            _empleadosFiltrados.value = resultado.filter { it.activo } // Solo muestra los activos por defecto
         }
     }
+
+    fun filtrarEmpleadosAvanzado(
+        codigo: String?,
+        activo: Boolean?,
+        oficinaId: String?,
+        departamentoId: String?,
+        puestosTeletrabajo: Int?,
+        oficinas: List<com.kathlg.flowit.data.model.Oficina>
+    ) {
+        val listaOriginal = _empleados.value ?: return
+
+        val filtrados = listaOriginal.filter { empleado ->
+            val oficina = oficinas.firstOrNull { it.id == empleado.oficina }
+            val cumpleTeletrabajo = puestosTeletrabajo == null || (oficina?.puestosTeletrabajo == puestosTeletrabajo)
+
+            (codigo.isNullOrEmpty() || empleado.codigo.contains(codigo, ignoreCase = true)) &&
+                    (activo == null || empleado.activo == activo) &&
+                    (oficinaId.isNullOrEmpty() || empleado.oficina == oficinaId) &&
+                    (departamentoId.isNullOrEmpty() || empleado.departamento == departamentoId) &&
+                    cumpleTeletrabajo
+        }
+
+        _empleadosFiltrados.value = filtrados
+    }
+
+
 
     fun crearEmpleado(empleado: Empleado, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
@@ -39,14 +64,6 @@ class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewMode
         }
     }
 
-
-    fun obtenerSiguienteNumeroEmpleado(onResult: (String) -> Unit) {
-        viewModelScope.launch {
-            val codigo = repository.obtenerSiguienteNumeroEmpleado()
-            onResult(codigo)
-        }
-    }
-
     fun actualizarEmpleado(empleado: Empleado, campos: Map<String, Any>, callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             val exito = repository.actualizarEmpleado(empleado, campos)
@@ -57,10 +74,10 @@ class EmpleadosViewModel(private val repository: EmpleadosRepository) : ViewMode
 
 
 
-    fun buscarPorCodigo(query: String) {
+    fun buscarPorNombre(query: String) {
         val empleadosActuales = _empleados.value ?: return
         val filtrados = empleadosActuales.filter {
-            it.codigo.lowercase().contains(query.trim().lowercase())
+            it.nombre.lowercase().contains(query.trim().lowercase())
         }
         _empleadosFiltrados.value = filtrados
     }

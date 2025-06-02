@@ -7,16 +7,16 @@ import com.kathlg.flowit.R
 import com.kathlg.flowit.data.model.Dispositivo
 
 class DispositivoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     private val tvNombre: TextView = itemView.findViewById(R.id.tvNombreDispositivo)
     private val tvTipo: TextView = itemView.findViewById(R.id.tvTipoDispositivo)
     private val tvEmpleado: TextView = itemView.findViewById(R.id.tvEmpleadoAsignado)
-    private val tvOficina: TextView = itemView.findViewById(R.id.tvOficina)
 
-    fun bind(dispositivo: Dispositivo) {
+    fun bind(dispositivo: Dispositivo, mapEmpleados: Map<String, String>) {
         tvNombre.text = dispositivo.nombre
         tvTipo.text = "Tipo: ${dispositivo.tipo}"
-        tvEmpleado.text = "Empleado: ${dispositivo.codigoEmpleado}"
-        tvOficina.text = "Oficina: ${dispositivo.codigoOficina}"
+        // Aquí cambiamos: buscamos el nombre real
+        val nombreEmpleado = mapEmpleados[dispositivo.codigoEmpleado] ?: dispositivo.codigoEmpleado
+        tvEmpleado.text = "Empleado: $nombreEmpleado"
     }
 }
+

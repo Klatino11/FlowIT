@@ -32,12 +32,4 @@
         android:text="Empleado: EMP001"
         android:textColor="@color/flowit_azul_intermedio"
         android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/tvOficina"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Oficina: ZGZCentral"
-        android:textColor="@color/flowit_azul_intermedio"
-        android:textSize="14sp" />
 </LinearLayout>

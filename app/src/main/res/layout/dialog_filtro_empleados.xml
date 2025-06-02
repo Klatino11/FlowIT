@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutFiltroEmpleados"
+    android:layout_width="800dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/fondo_detalle">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filtrar Empleados"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/flowit_azul_oscuro"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Nº Empleado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Nº Empleado:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroCodigo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: EMPL0005"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Activo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Activo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spFiltroActivo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- Oficina -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Oficina:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spFiltroOficina"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- Departamento -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Departamento:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <Spinner
+            android:id="@+id/spFiltroDepartamento"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <!-- Puestos de Teletrabajo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Teletrabajo:"
+            android:textColor="@color/flowit_azul_oscuro"/>
+
+        <EditText
+            android:id="@+id/etFiltroTeletrabajo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Ej: 2"
+            android:inputType="number"
+            android:textSize="15sp"
+            android:textColor="@color/flowit_negro"
+            android:textColorHint="@color/HintTexts"/>
+    </LinearLayout>
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:textColor="@color/flowit_azul_oscuro"
+            android:backgroundTint="@color/flowit_turquesa"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnAplicarFiltro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aplicar"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/flowit_azul_oscuro"/>
+    </LinearLayout>
+</LinearLayout>

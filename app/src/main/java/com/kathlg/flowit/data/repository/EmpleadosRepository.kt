@@ -29,7 +29,7 @@ class EmpleadosRepository {
                 if (
                     codigo != null && nombre != null && email != null &&
                     tipoDocumento != null && numeroDocumento != null &&
-                    refDepto != null && refOficina != null && activo
+                    refDepto != null && refOficina != null
                 ) {
                     Empleado(
                         id = doc.id,
@@ -43,7 +43,7 @@ class EmpleadosRepository {
                         activo = activo
                     )
                 } else {
-                    Log.w("EmpleadosRepository", "⚠️ Empleado inválido o inactivo: ${doc.id}")
+                    Log.w("EmpleadosRepository", "⚠️ Empleado inválido: ${doc.id}")
                     null
                 }
             }
